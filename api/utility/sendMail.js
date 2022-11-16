@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer';
 
 
 // send acc activation email
-export const accActivationEmail = async (to) => {
+export const accActivationEmail = async (to, data) => {
 
     // create trasporter
     let transport = nodemailer.createTransport({
@@ -143,7 +143,10 @@ export const accActivationEmail = async (to) => {
                         <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                             <tr>
                                 <td bgcolor="#ffffff" align="center" valign="top" style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
-                                    <h1 style="font-size: 48px; font-weight: 400; margin: 2;">Welcome!</h1> <img src="https://1000logos.net/wp-content/uploads/2016/11/google-logo.jpg" width="125" height="120" style="display: block; border: 0px;" />
+                                    <h1 style="font-size: 48px; font-weight: 400; margin: 2;">Welcome!</h1> <br> 
+                                    <h5>${data.name}</h5>
+                                    <img src="https://1000logos.net/wp-content/uploads/2016/11/google-logo.jpg" width="125" height="120" style="display: block; border: 0px;" />
+                                    
                                 </td>
                             </tr>
                         </table>
@@ -164,7 +167,7 @@ export const accActivationEmail = async (to) => {
                                             <td bgcolor="#ffffff" align="center" style="padding: 20px 30px 30px 30px;">
                                                 <table border="0" cellspacing="0" cellpadding="0">
                                                     <tr>
-                                                        <td align="center" style="border-radius: 3px;" bgcolor="red"><a href="https://bbbootstrap.com/snippets/bootstrap-5-email-confirmation-66401343" target="_blank" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid red; display: inline-block;">Activate Account</a></td>
+                                                        <td align="center" style="border-radius: 3px;" bgcolor="red"><a href="${data.link}" target="_blank" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid red; display: inline-block;">Activate Account</a></td>
                                                     </tr>
                                                 </table>
                                             </td>

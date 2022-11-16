@@ -45,9 +45,13 @@ export const register = async (req, res, next) => {
 
         // create token 
         const token = createToken({id: user._id}, '365d');
+        const activateToken = createToken({id: user._id}, '30d');
 
         // send mail 
-        accActivationEmail(user.email);
+        accActivationEmail(user.email, {
+            name : user.first_name +' '+user.sur_name,
+            link : `${process.env.APP_URL+':'+process.env.PORT}/activate/${activateToken}`
+        });
 
         // user created message
         if(user){
@@ -121,6 +125,19 @@ export const register = async (req, res, next) => {
     }
 
 }
+
+
+/**
+ *  @access Public
+ *  @route api/User/account-verfiy
+ *  @method POST
+ */
+ export const accountActivate = async (req, res, next) => {
+   
+    res.send('loggedInUser okay');
+
+}
+
 
 
 /**
