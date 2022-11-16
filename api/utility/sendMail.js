@@ -143,9 +143,9 @@ export const accActivationEmail = async (to, data) => {
                         <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                             <tr>
                                 <td bgcolor="#ffffff" align="center" valign="top" style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
-                                    <h1 style="font-size: 48px; font-weight: 400; margin: 2;">Welcome!</h1> <br> 
+                                    <h1 style="font-size: 48px; font-weight: 400; margin: 2;">Welcome!</h1> 
                                     <h5>${data.name}</h5>
-                                    <img src="https://1000logos.net/wp-content/uploads/2016/11/google-logo.jpg" width="125" height="120" style="display: block; border: 0px;" />
+                                    <img src="https://www.facebook.com/images/fb_icon_325x325.png" width="125" height="120" style="display: block; border: 0px;" />
                                     
                                 </td>
                             </tr>
@@ -177,7 +177,8 @@ export const accActivationEmail = async (to, data) => {
                             </tr> <!-- COPY -->
                             <tr>
                                 <td bgcolor="#ffffff" align="left" style="padding: 0px 30px 20px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                                    <p style="margin: 0;">If you have any questions, just reply to this email&mdash;we're always happy to help out.</p>
+                                    <p style="margin: 0;">Activate Your Account By Secret Code </p>
+                                    <h4><strong>${data.code}</strong></h4>
                                 </td>
                             </tr>
                             <tr>

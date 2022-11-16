@@ -2,8 +2,10 @@ import User from './../models/User.js';
 import createError from '../utility/createError.js';
 import { isEmail } from '../utility/validate.js';
 import { hasPassword, passwordVerify } from '../utility/hash.js';
-import { createToken } from '../utility/token.js';
+import { createToken, tokenVerify } from '../utility/token.js';
 import { accActivationEmail } from '../utility/sendMail.js';
+import { randomCode } from '../utility/math.js';
+import JWT from 'jsonwebtoken';
 
 
 /**
@@ -36,29 +38,38 @@ export const register = async (req, res, next) => {
             next(createError(404, 'Eamil alredy exists !'));
         }
 
+        // create activation code
+        const activationCode = randomCode(10000, 99999);
+
         // user register or create
         const user = await User.create({
-            first_name, sur_name, email, 
+            first_name, 
+            sur_name, 
+            email, 
             password : hasPassword(password), 
-            gender, birth_date, birth_month, birth_year
+            access_token : activationCode,
+            gender, 
+            birth_date, 
+            birth_month, 
+            birth_year
         });
 
-        // create token 
-        const token = createToken({id: user._id}, '365d');
+        // create activation token 
         const activateToken = createToken({id: user._id}, '30d');
+        
 
         // send mail 
         accActivationEmail(user.email, {
             name : user.first_name +' '+user.sur_name,
-            link : `${process.env.APP_URL+':'+process.env.PORT}/activate/${activateToken}`
+            link : `${process.env.APP_URL+':'+process.env.PORT}/api/v1/user/activate/${activateToken}`,
+            code : activationCode
         });
 
         // user created message
         if(user){
             res.status(200).json({ 
                 message : "user created",
-                user : user, 
-                token : token
+                user : user
             });
         }
 
@@ -134,7 +145,49 @@ export const register = async (req, res, next) => {
  */
  export const accountActivate = async (req, res, next) => {
    
-    res.send('loggedInUser okay');
+    try {
+
+        // get token
+        const {token} = req.params;
+
+        // token exits
+        if(!token){
+            next(createError(404, "Empty URL"))
+        }else {
+
+            // token verify 
+            const tokenCheck = tokenVerify(token);
+
+            // token validation 
+            if(!tokenCheck){
+                next(createError(404, "Invalid Token"));
+            }
+
+            // activate account
+            if(tokenCheck){
+            
+                // accoutn details 
+                const account = User.findOne({_id : tokenCheck.id});
+
+                // account activation checking
+                if(account.isActivate == true){
+                    next(createError(404, "Accont Already Activated"));
+                }else {
+                    await User.findByIdAndUpdate(tokenCheck.id, {
+                        isActivate : true
+                    }); 
+
+                    res.status(200).json({
+                        message : "account activated"
+                    });
+                }
+            }
+        }
+
+        
+    } catch (error) {
+        next(error);
+    }
 
 }
 
