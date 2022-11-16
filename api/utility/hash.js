@@ -10,3 +10,10 @@ export const hasPassword  = (password) => {
 
     return hasPass;
 }
+
+
+
+// password verify
+export const passwordVerify = (password, hassPass) => {
+    return bcrypt.compareSync(password, hassPass);
+}

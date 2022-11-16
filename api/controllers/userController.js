@@ -1,7 +1,7 @@
 import User from './../models/User.js';
 import createError from '../utility/createError.js';
 import { isEmail } from '../utility/validate.js';
-import { hasPassword } from '../utility/hash.js';
+import { hasPassword, passwordVerify } from '../utility/hash.js';
 import { createToken } from '../utility/token.js';
 
 
@@ -11,7 +11,7 @@ import { createToken } from '../utility/token.js';
  *  @method POST
  */
 export const register = async (req, res, next) => {
-   
+//    console.log(req.body);
     try {
         
         // get all form data
@@ -37,7 +37,9 @@ export const register = async (req, res, next) => {
 
         // user register or create
         const user = await User.create({
-            first_name, sur_name, email, password : hasPassword(password), gender, birth_date, birth_month, birth_year
+            first_name, sur_name, email, 
+            password : hasPassword(password), 
+            gender, birth_date, birth_month, birth_year
         });
 
         // create token 
@@ -53,7 +55,8 @@ export const register = async (req, res, next) => {
         }
 
     } catch (error) {
-        
+        next(error);
+        console.log(error);
     }
 
 }
@@ -67,7 +70,51 @@ export const register = async (req, res, next) => {
  */
  export const login = async (req, res, next) => {
    
-    res.send('user login okay');
+    try {
+
+        // get all form data
+        const { email, password} = req.body;
+
+        // form feilds validation
+        if(!email || !password ){
+            next(createError(404, 'All Feids are reqired !'));
+        }
+
+        // email validation checking
+        if(!isEmail(email)){
+            next(createError(404, 'Invalid Email !'));
+        }
+
+        // valid user checking
+        const loginUser = await User.findOne({email});
+
+        // valid user checking
+        if(!loginUser){
+            next(createError(404, 'User not exists !'));
+        }else {
+
+            // user password checking 
+            if(!passwordVerify(password, loginUser.password)){
+                next(createError(404, 'Wrong Password !'));
+            }else {
+
+                // create token 
+                const token = createToken({id: loginUser._id}, '365d');
+
+                // user LoggedIn message
+                res.status(200).cookie('authToken', token).json({ 
+                    message : "user LoggedIn Successfully",
+                    user : loginUser, 
+                    token : token
+                });
+
+            }
+
+        }
+        
+    } catch (error) {
+        next(error);
+    }
 
 }
 

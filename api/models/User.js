@@ -120,7 +120,8 @@ const userSchema = mongoose.Schema({
         default : [] 
     },
     access_token : {
-        type : String
+        type : String,
+        default : ''
     },
     isActivate : {
         type : Boolean,
