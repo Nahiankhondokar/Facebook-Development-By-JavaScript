@@ -3,6 +3,7 @@ import createError from '../utility/createError.js';
 import { isEmail } from '../utility/validate.js';
 import { hasPassword, passwordVerify } from '../utility/hash.js';
 import { createToken } from '../utility/token.js';
+import { accActivationEmail } from '../utility/sendMail.js';
 
 
 /**
@@ -44,6 +45,9 @@ export const register = async (req, res, next) => {
 
         // create token 
         const token = createToken({id: user._id}, '365d');
+
+        // send mail 
+        accActivationEmail(user.email);
 
         // user created message
         if(user){
