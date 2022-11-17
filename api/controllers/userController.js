@@ -3,7 +3,7 @@ import createError from '../utility/createError.js';
 import { isEmail } from '../utility/validate.js';
 import { hasPassword, passwordVerify } from '../utility/hash.js';
 import { createToken, tokenVerify } from '../utility/token.js';
-import { accActivationEmail } from '../utility/sendMail.js';
+import { accActivationEmail, passwordResetEmail } from '../utility/sendMail.js';
 import { randomCode } from '../utility/math.js';
 import JWT from 'jsonwebtoken';
 
@@ -262,9 +262,8 @@ export const register = async (req, res, next) => {
             if(!user){
                 next(createError(404, "Invalid Token !"));
             }
-
-             // get loggedIn User data
-             if(user){
+            // get loggedIn User data
+            if(user){
                 const loggedIn_user = await User.findById(user.id);
 
                 // validaiton
@@ -273,13 +272,119 @@ export const register = async (req, res, next) => {
                 }else {
                     res.status(200).json({loggedIn_user});
                 }
+            }
+        }
+    } catch (error) {
+        next(error);
+    }
 
+}
+
+
+/**
+ *  forgot password
+ *  @access Public
+ *  @route api/User/forgot-password
+ *  @method POST
+ */
+export const forgotPassword = async (req, res, next) => {
+    try {
+
+        // get user info
+        const { email } = req.body;
+
+        // check valid user 
+        const user = await User.findOne({ email });
+
+        // validation
+        if(!user){
+            next(createError(404, "User not found"));
+        }
+
+        // email send to user for reset password
+        if(user){
+            // create activation token 
+            const resetPasswordToken = createToken({id: user._id}, '30m');
+
+            // create activation code
+            let activationCode = randomCode(10000, 99999);
+
+            // unique activation code checking
+            let activateCodeCheck = await User.findOne({access_token : activationCode});
+            if(activateCodeCheck){
+                let activationCode = randomCode(10000, 99999);
             }
 
-            
+            // send mail for reset password
+            passwordResetEmail(user.email, {
+                name : user.first_name +' '+user.sur_name,
+                link : `${process.env.APP_URL+':'+process.env.PORT}/api/v1/user/forgot-password/${resetPasswordToken}`,
+                code : activationCode
+            });
+
+            // update user access token 
+            await User.findByIdAndUpdate(user._id, {
+                access_token : activationCode
+            });
+
+            // resposne send
+            res.status(200).json({ 
+                message : "Password reset link sent to email"
+            });
+
         }
 
         
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+/**
+ *  @access Public
+ *  @route api/User/password-reset-link
+ *  @method POST
+ */
+ export const passwordResetByLink = async (req, res, next) => {
+   
+    try {
+
+        // get token & new password
+        const {token} = req.params;
+        const {password} = req.body;
+
+        // token exits
+        if(!token){
+            next(createError(404, "Empty URL"))
+        }
+
+        // valid token or password reset
+        if(token){
+            // token verify 
+            const tokenCheck = tokenVerify(token);
+
+            // token validation 
+            if(!tokenCheck){
+                next(createError(404, "Invalid Token"));
+            }
+
+           // reset password
+           if(tokenCheck){
+
+            // get user
+            await User.findByIdAndUpdate(tokenCheck.id, {
+                password : hasPassword(password)
+            });
+
+            // resposne send
+            res.status(200).json({ 
+                message : "Password reset successfully"
+            });
+
+           }
+        }
+
         
     } catch (error) {
         next(error);
