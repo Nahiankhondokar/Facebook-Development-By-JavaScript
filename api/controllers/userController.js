@@ -246,6 +246,43 @@ export const register = async (req, res, next) => {
  */
  export const loggedInUser = async (req, res, next) => {
    
-    res.send('loggedInUser okay');
+    try {
+
+        // get token
+        const auth_token = req.headers.authorization;
+
+        // get only token
+        if(auth_token){
+            const token = auth_token.split(' ')[1];
+
+            // get token data
+            const user = tokenVerify(token);
+
+            // validation
+            if(!user){
+                next(createError(404, "Invalid Token !"));
+            }
+
+             // get loggedIn User data
+             if(user){
+                const loggedIn_user = await User.findById(user.id);
+
+                // validaiton
+                if(!loggedIn_user){
+                    next(createError(404, "LoggedIn User no Found!"));
+                }else {
+                    res.status(200).json({loggedIn_user});
+                }
+
+            }
+
+            
+        }
+
+        
+        
+    } catch (error) {
+        next(error);
+    }
 
 }
