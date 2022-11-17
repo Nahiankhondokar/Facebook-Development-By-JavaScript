@@ -1,5 +1,5 @@
 import express from 'express';
-import { accountActivate, loggedInUser, login, register } from '../controllers/userController.js';
+import { accountActivateByCode, accountActivateByLink, loggedInUser, login, register } from '../controllers/userController.js';
 
 
 // initialize 
@@ -10,7 +10,8 @@ const router = express.Router();
 router.post('/register', register);
 router.post('/login', login);
 router.get('/me', loggedInUser);
-router.get('/activate/:token', accountActivate);
+router.get('/activate/:token', accountActivateByLink);
+router.post('/activate-code', accountActivateByCode);
 
 
 

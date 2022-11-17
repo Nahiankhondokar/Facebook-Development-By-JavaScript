@@ -39,7 +39,13 @@ export const register = async (req, res, next) => {
         }
 
         // create activation code
-        const activationCode = randomCode(10000, 99999);
+        let activationCode = randomCode(10000, 99999);
+
+        // unique activation code checking
+        let activateCodeCheck = await User.findOne({access_token : activationCode});
+        if(activateCodeCheck){
+            let activationCode = randomCode(10000, 99999);
+        }
 
         // user register or create
         const user = await User.create({
@@ -143,7 +149,7 @@ export const register = async (req, res, next) => {
  *  @route api/User/account-verfiy
  *  @method POST
  */
- export const accountActivate = async (req, res, next) => {
+ export const accountActivateByLink = async (req, res, next) => {
    
     try {
 
@@ -174,7 +180,8 @@ export const register = async (req, res, next) => {
                     next(createError(404, "Accont Already Activated"));
                 }else {
                     await User.findByIdAndUpdate(tokenCheck.id, {
-                        isActivate : true
+                        isActivate : true,
+                        access_token : ''
                     }); 
 
                     res.status(200).json({
@@ -185,6 +192,45 @@ export const register = async (req, res, next) => {
         }
 
         
+    } catch (error) {
+        next(error);
+    }
+
+}
+
+
+/**
+ *  @access Public
+ *  @route api/User/activation-code
+ *  @method POST
+ */
+ export const accountActivateByCode = async (req, res, next) => {
+   
+    try {
+
+        // get activation code
+        const {code} = req.body;
+
+        // get inactivete user
+        const user = await User.findOne().and([{access_token : code}, {isActivate : false}]);
+
+        // validation
+        if(!user){
+            next(createError(404, "Account Not Found !"));
+        }
+
+        // activate user
+        if(user){
+            await User.findByIdAndUpdate(user._id, {
+                isActivate : true,
+                access_token : ''
+            });
+
+            res.status(200).json({
+                status : "User Activated"
+            });
+        }
+
     } catch (error) {
         next(error);
     }
