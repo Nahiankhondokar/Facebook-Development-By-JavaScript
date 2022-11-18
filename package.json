@@ -5,9 +5,9 @@
   "main": "./api/server.js",
   "type": "module",
   "scripts": {
-    "social": "npm start --prefix social",
+    "client": "npm start --prefix client",
     "server": "nodemon api/server.js",
-    "start": "concurrently \"npm run server\" \"npm run social\""
+    "start": "concurrently \"npm run server\" \"npm run client\""
   },
   "keywords": [],
   "author": "",
