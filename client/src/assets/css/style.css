@@ -98,6 +98,10 @@
  * Basic Reseting code   
 **/
 
+.error-border {
+  border-color: red !important;
+}
+
 * {
   margin: 0px;
   padding: 0px;
