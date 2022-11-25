@@ -1,9 +1,7 @@
-
-
 // intial state
 export const initialState = {
-    user : [],
-    loginStatus : false,
-    loading : false,
-    message : ''
-}
+  user: {},
+  loginStatus: false,
+  loading: false,
+  message: "",
+};

@@ -9,6 +9,7 @@ function App() {
   return (
     <>
       <ToastContainer
+        style={{ zIndex: 99999 }}
         position="top-right"
         autoClose={2000}
         closeOnClick

@@ -1,13 +1,51 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import crossBtn from "../../assets/icons/cross.png";
+import { UserRegister } from "../../redux/auth/action";
+import CreateToaster from "../../utility/Toaster";
+
+// fb day array
+const fbDay = [
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 21,
+  22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+];
+
+// fb month array
+const fbMonth = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Agu",
+  "Sep",
+  "Opt",
+  "Nov",
+  "Dec",
+];
+
+// fb year
+const fbYear = Array.from(
+  { length: 70 },
+  (_, i) => new Date().getFullYear() - i
+);
 
 const RegisterModal = ({ setRegModal }) => {
+  // dispatch
+  const dispatach = useDispatch();
+
   // input data state
   const [input, setInput] = useState({
     fname: "",
     sname: "",
     password: "",
     mobileOrEmail: "",
+    fbDay: "",
+    fbMonth: "",
+    fbYear: "",
+    gender: "",
   });
 
   // input feilds manage
@@ -45,6 +83,48 @@ const RegisterModal = ({ setRegModal }) => {
     }
   };
 
+  // user registraion
+  const handleUserRegister = (e) => {
+    e.preventDefault();
+
+    // validaiton
+    if (
+      !input.fname ||
+      !input.sname ||
+      !input.password ||
+      !input.mobileOrEmail ||
+      !input.gender
+    ) {
+      CreateToaster("All Feilds Are Require");
+    } else {
+      // user register
+      dispatach(
+        UserRegister({
+          first_name: input.fname,
+          sur_name: input.sname,
+          email: input.mobileOrEmail,
+          password: input.password,
+          gender: input.gender,
+          birth_date: input.fbDay,
+          birth_month: input.fbMonth,
+          birth_year: input.fbYear,
+        })
+      );
+
+      // make empty feilds
+      e.target.reset();
+      setInput({
+        fname: "",
+        sname: "",
+        password: "",
+        mobileOrEmail: "",
+      });
+
+      // close register modal
+      setRegModal(false);
+    }
+  };
+
   return (
     <>
       <div className="blur-box">
@@ -59,7 +139,7 @@ const RegisterModal = ({ setRegModal }) => {
             </button>
           </div>
           <div className="sign-up-body">
-            <form action="">
+            <form onSubmit={handleUserRegister}>
               <div className="reg-form reg-form-inline">
                 <input
                   className={validate.fname && "error-border"}
@@ -105,14 +185,26 @@ const RegisterModal = ({ setRegModal }) => {
               <div className="reg-form">
                 <span>Date of birth</span>
                 <div className="reg-form-select">
-                  <select name="" id="">
-                    <option value="">Day</option>
+                  <select name="fbDay" id="" onChange={handleInputData}>
+                    {fbDay.map((item, index) => (
+                      <option value={item} key={index}>
+                        {item}
+                      </option>
+                    ))}
                   </select>
-                  <select name="" id="">
-                    <option value="">Month</option>
+                  <select name="fbMonth" id="" onChange={handleInputData}>
+                    {fbMonth.map((item, index) => (
+                      <option value={item} key={index}>
+                        {item}
+                      </option>
+                    ))}
                   </select>
-                  <select name="" id="">
-                    <option value="">Year</option>
+                  <select name="fbYear" id="" onChange={handleInputData}>
+                    {fbYear.map((item, index) => (
+                      <option value={item} key={index}>
+                        {item}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -122,15 +214,30 @@ const RegisterModal = ({ setRegModal }) => {
                 <div className="reg-form-select">
                   <label>
                     Female
-                    <input type="radio" name="gender" />
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="Female"
+                      onChange={handleInputData}
+                    />
                   </label>
                   <label>
                     Male
-                    <input type="radio" name="gender" />
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="Male"
+                      onChange={handleInputData}
+                    />
                   </label>
                   <label>
                     Custom
-                    <input type="radio" name="gender" />
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="Custom"
+                      onChange={handleInputData}
+                    />
                   </label>
                 </div>
               </div>
