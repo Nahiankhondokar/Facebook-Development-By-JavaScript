@@ -114,21 +114,12 @@ const RegisterModal = ({ setRegModal }) => {
             birth_month: input.fbMonth,
             birth_year: input.fbYear,
           },
-          navigate
+          navigate,
+          e,
+          setInput,
+          setRegModal
         )
       );
-
-      // make empty feilds
-      e.target.reset();
-      setInput({
-        fname: "",
-        sname: "",
-        password: "",
-        mobileOrEmail: "",
-      });
-
-      // close register modal
-      setRegModal(false);
     }
   };
 

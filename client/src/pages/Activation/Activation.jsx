@@ -1,13 +1,23 @@
 import React, { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import facebook from "../../assets/icons/facebook.svg";
 import Footer from "../../components/Footer/Footer";
+import { AccountActivateByCode } from "../../redux/auth/action";
+import { useState } from "react";
 import Cookie from "js-cookie";
 import "../../assets/css/style.css";
+import CreateToaster from "../../utility/Toaster";
 
 const Activation = () => {
   // navigaet
   const navigate = useNavigate();
+
+  // dispatch
+  const dispatch = useDispatch();
+
+  // activation state
+  const [code, setCode] = useState("");
 
   // get cookie
   const activationEmail = Cookie.get("email");
@@ -20,6 +30,31 @@ const Activation = () => {
     navigate("/");
   };
 
+  // account activate input manage
+  const handleActivateCodeManage = (e) => {
+    setCode(e.target.value);
+  };
+
+  // account activate by code
+  const handleAccActivateByCode = (e) => {
+    e.preventDefault();
+    // validation
+    if (!code) {
+      CreateToaster("Activation Code is required", "warn");
+    } else {
+      dispatch(
+        AccountActivateByCode(
+          {
+            code: code,
+          },
+          navigate,
+          Cookie
+        )
+      );
+    }
+  };
+
+  // use effect hook
   useEffect(() => {
     if (!activationEmail) {
       navigate("/");
@@ -53,7 +88,11 @@ const Activation = () => {
                 is 6 numbers long.
               </p>
               <div className="code-box">
-                <input type="text" />
+                <input
+                  type="text"
+                  value={code}
+                  onChange={handleActivateCodeManage}
+                />
                 <div className="code-text">
                   <span>We sent your code to:</span>
                   <span>{activationEmail}</span>
@@ -70,7 +109,11 @@ const Activation = () => {
                 >
                   Cancel
                 </a>
-                <a className="continue" href="#">
+                <a
+                  onClick={handleAccActivateByCode}
+                  className="continue"
+                  href="#"
+                >
                   Continue
                 </a>
               </div>
