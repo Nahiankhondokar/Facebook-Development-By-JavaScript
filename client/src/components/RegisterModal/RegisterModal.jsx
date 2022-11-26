@@ -1,40 +1,16 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import crossBtn from "../../assets/icons/cross.png";
 import { UserRegister } from "../../redux/auth/action";
 import CreateToaster from "../../utility/Toaster";
 
-// fb day array
-const fbDay = [
-  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 21,
-  22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
-];
-
-// fb month array
-const fbMonth = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Agu",
-  "Sep",
-  "Opt",
-  "Nov",
-  "Dec",
-];
-
-// fb year
-const fbYear = Array.from(
-  { length: 70 },
-  (_, i) => new Date().getFullYear() - i
-);
-
 const RegisterModal = ({ setRegModal }) => {
   // dispatch
   const dispatach = useDispatch();
+
+  //navigate
+  const navigate = useNavigate();
 
   // input data state
   const [input, setInput] = useState({
@@ -47,6 +23,34 @@ const RegisterModal = ({ setRegModal }) => {
     fbYear: "",
     gender: "",
   });
+
+  // fb day array
+  const fbDay = [
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+    21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+  ];
+
+  // fb month array
+  const fbMonth = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Agu",
+    "Sep",
+    "Opt",
+    "Nov",
+    "Dec",
+  ];
+
+  // fb year
+  const fbYear = Array.from(
+    { length: 70 },
+    (_, i) => new Date().getFullYear() - i
+  );
 
   // input feilds manage
   const handleInputData = (e) => {
@@ -99,16 +103,19 @@ const RegisterModal = ({ setRegModal }) => {
     } else {
       // user register
       dispatach(
-        UserRegister({
-          first_name: input.fname,
-          sur_name: input.sname,
-          email: input.mobileOrEmail,
-          password: input.password,
-          gender: input.gender,
-          birth_date: input.fbDay,
-          birth_month: input.fbMonth,
-          birth_year: input.fbYear,
-        })
+        UserRegister(
+          {
+            first_name: input.fname,
+            sur_name: input.sname,
+            email: input.mobileOrEmail,
+            password: input.password,
+            gender: input.gender,
+            birth_date: input.fbDay,
+            birth_month: input.fbMonth,
+            birth_year: input.fbYear,
+          },
+          navigate
+        )
       );
 
       // make empty feilds

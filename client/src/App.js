@@ -4,6 +4,8 @@ import Home from "./pages/Home/Home";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
+import Activation from "./pages/Activation/Activation";
+import Profile from "./pages/Profile/Profile";
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Auth />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/activation" element={<Activation />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </>
   );

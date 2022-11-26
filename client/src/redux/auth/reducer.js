@@ -1,17 +1,34 @@
+import {
+  REGISTER_FAILED,
+  REGISTER_REQUEST,
+  REGISTER_SUCCESS,
+} from "./actionType";
 import { initialState } from "./initialState";
 
-
-
-
 // create reducer
-export const AuthReducer = (state = initialState, {type, action}) => {
+export const AuthReducer = (state = initialState, { type, payload }) => {
+  switch (type) {
+    case REGISTER_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
 
-    switch (type) {
-        case '':
-            return '';
-    
-        default:
-            return state;
-    }
+    case REGISTER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        message: payload,
+      };
 
-}
+    case REGISTER_FAILED:
+      return {
+        ...state,
+        loading: false,
+        message: payload,
+      };
+
+    default:
+      return state;
+  }
+};
