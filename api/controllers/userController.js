@@ -370,3 +370,62 @@ export const passwordResetByLink = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ *  @access Public
+ *  @route api/User/resend-accActivateEmail
+ *  @method POST
+ */
+export const resendAccActivateEmail = async (req, res, next) => {
+  try {
+    // get all form data
+    const { email } = req.body;
+    // console.log(email);
+
+    // inactivate user checking
+    const emailUser = await User.findOne().and([
+      { isActivate: false },
+      { email: email },
+    ]);
+
+    // validation
+    if (!emailUser) {
+      next(createError(404, "Email Not Exists!"));
+    }
+
+    // create activation code
+    let activationCode = randomCode(10000, 99999);
+
+    // user accesss token update
+    await User.findByIdAndUpdate(emailUser._id, {
+      access_token: activationCode,
+    });
+
+    // create activation token
+    const activateToken = createToken({ id: emailUser._id }, "30d");
+
+    // send mail
+    accActivationEmail(emailUser.email, {
+      name: emailUser.first_name + " " + emailUser.sur_name,
+      link: `${
+        process.env.APP_URL + ":" + process.env.PORT
+      }/api/v1/user/activate/${activateToken}`,
+      code: activationCode,
+    });
+
+    // user created message
+    if (emailUser) {
+      res
+        .status(200)
+        .cookie("email", emailUser.email, {
+          expires: new Date(Date.now() + 1000 * 60 * 15),
+        })
+        .json({
+          message: "Activation Email Has Been Sent",
+        });
+    }
+  } catch (error) {
+    next(error);
+    // console.log(error);
+  }
+};

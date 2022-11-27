@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import facebook from "../../assets/icons/facebook.svg";
 import Footer from "../../components/Footer/Footer";
-import { AccountActivateByCode } from "../../redux/auth/action";
+import { AccountActivateByCode, ResendEmail } from "../../redux/auth/action";
 import { useState } from "react";
 import Cookie from "js-cookie";
 import "../../assets/css/style.css";
@@ -54,6 +54,12 @@ const Activation = () => {
     }
   };
 
+  // email resend
+  const hanldeResendEmail = (e) => {
+    e.preventDefault();
+    dispatch(ResendEmail(activationEmail));
+  };
+
   // use effect hook
   useEffect(() => {
     if (!activationEmail) {
@@ -100,7 +106,9 @@ const Activation = () => {
               </div>
             </div>
             <div className="reset-footer">
-              <a href="#">Didn't get a code?</a>
+              <a href="#" onClick={hanldeResendEmail}>
+                Didn't get a code?
+              </a>
               <div className="reset-btns">
                 <a
                   onClick={handleCancelCodeActivation}

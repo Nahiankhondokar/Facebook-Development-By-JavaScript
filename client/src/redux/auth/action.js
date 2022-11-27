@@ -1,5 +1,6 @@
 import axios from "axios";
 import CreateToaster from "../../utility/Toaster";
+import Cookie from "js-cookie";
 import {
   REGISTER_FAILED,
   REGISTER_REQUEST,
@@ -83,3 +84,21 @@ export const AccountActivateByCode =
       CreateToaster(error.response.data.message, "error");
     }
   };
+
+// resend email
+export const ResendEmail = (email) => async (dispatch) => {
+  try {
+    await axios
+      .post("/api/v1/user/resend-activation-email", {
+        email: email,
+      })
+      .then((res) => {
+        CreateToaster(res.data.message, "success");
+      })
+      .catch((error) => {
+        CreateToaster(error.response.data.message, "error");
+      });
+  } catch (error) {
+    CreateToaster(error.response.data.message, "error");
+  }
+};
