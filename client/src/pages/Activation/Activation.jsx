@@ -8,6 +8,7 @@ import { useState } from "react";
 import Cookie from "js-cookie";
 import "../../assets/css/style.css";
 import CreateToaster from "../../utility/Toaster";
+import Header from "../../components/Header/Header";
 
 const Activation = () => {
   // navigaet
@@ -60,19 +61,7 @@ const Activation = () => {
   });
   return (
     <>
-      <div className="reset-header">
-        <div className="reset-header-wraper">
-          <div className="reset-logo">
-            <img src={facebook} alt="" />
-          </div>
-          <div className="login-part">
-            <input type="text" placeholder="Email or mobile number" />
-            <input type="text" placeholder="Password" />
-            <button>Log In</button>
-            <a href="#">Forgotten account?</a>
-          </div>
-        </div>
-      </div>
+      <Header />
 
       <div className="reset-area">
         <div className="reset-wraper">

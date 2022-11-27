@@ -6,6 +6,9 @@ import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import Activation from "./pages/Activation/Activation";
 import Profile from "./pages/Profile/Profile";
+import ForgotPass from "./pages/ForgotPass/ForgotPass";
+import FindAccount from "./pages/FindAccount/FindAccount";
+import ChangePassword from "./pages/ChangePassword/ChangePassword";
 
 function App() {
   return (
@@ -25,6 +28,9 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/activation" element={<Activation />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/forgot-password" element={<ForgotPass />} />
+        <Route path="/find-account" element={<FindAccount />} />
+        <Route path="/change-password" element={<ChangePassword />} />
       </Routes>
     </>
   );

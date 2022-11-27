@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Login = ({ setRegModal }) => {
   return (
@@ -16,7 +17,7 @@ const Login = ({ setRegModal }) => {
           </div>
         </form>
 
-        <a href="#">Forgotten password?</a>
+        <Link to="/find-account">Forgotten password?</Link>
 
         <div className="divider"></div>
 

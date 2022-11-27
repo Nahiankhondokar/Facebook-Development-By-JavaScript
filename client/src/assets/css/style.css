@@ -1179,12 +1179,12 @@ Components
 }
 
 .code-box input {
-  height: 50px;
+  height: 40px;
   padding: 0px 10px;
   border-radius: 6px;
   border: 1px solid #ccc;
-  font-size: 24px;
-  width: 50%;
+  font-size: 20px;
+  width: 100%;
 }
 
 .reset-footer {
