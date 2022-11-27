@@ -42,15 +42,7 @@ const Activation = () => {
     if (!code) {
       CreateToaster("Activation Code is required", "warn");
     } else {
-      dispatch(
-        AccountActivateByCode(
-          {
-            code: code,
-          },
-          navigate,
-          Cookie
-        )
-      );
+      dispatch(AccountActivateByCode(code, activationEmail, navigate));
     }
   };
 

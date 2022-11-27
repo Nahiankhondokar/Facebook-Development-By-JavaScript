@@ -64,10 +64,13 @@ export const UserRegister =
 
 // Account Activate by code
 export const AccountActivateByCode =
-  (code, navigate, Cookie) => async (dispatch) => {
+  (code, email, navigate) => async (dispatch) => {
     try {
       await axios
-        .post("/api/v1/user/activate-code", code)
+        .post("/api/v1/user/activate-code", {
+          code: code,
+          email: email,
+        })
         .then((res) => {
           CreateToaster("Account Activated, Please Login", "success");
 

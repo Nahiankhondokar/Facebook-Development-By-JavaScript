@@ -201,29 +201,32 @@ export const accountActivateByLink = async (req, res, next) => {
 export const accountActivateByCode = async (req, res, next) => {
   try {
     // get activation code
-    const { code } = req.body;
+    const { code, email } = req.body;
 
     // get inactivete user
-    const user = await User.findOne().and([
-      { access_token: code },
-      { isActivate: false },
-    ]);
+    const user = await User.findOne({ email });
 
-    // validation
+    // validation checking
     if (!user) {
-      next(createError(404, "Account Not Found !"));
-    }
+      next(createError(404, "Email does not exits !"));
+    } else {
+      if (user.isActivate == true) {
+        next(createError(404, "Account already activated !"));
+      } else {
+        if (user.access_token != code) {
+          next(createError(404, "OTP is invalid !"));
+        } else {
+          // activate user
+          await User.findByIdAndUpdate(user._id, {
+            isActivate: true,
+            access_token: "",
+          });
 
-    // activate user
-    if (user) {
-      await User.findByIdAndUpdate(user._id, {
-        isActivate: true,
-        access_token: "",
-      });
-
-      res.status(200).json({
-        status: "User Activated",
-      });
+          res.status(200).json({
+            status: "User Activated",
+          });
+        }
+      }
     }
   } catch (error) {
     next(error);
