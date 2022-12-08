@@ -1,6 +1,6 @@
 import User from "./../models/User.js";
 import createError from "../utility/createError.js";
-import { isEmail } from "../utility/validate.js";
+import { isEmail, isMobile } from "../utility/validate.js";
 import { hasPassword, passwordVerify } from "../utility/hash.js";
 import { createToken, tokenVerify } from "../utility/token.js";
 import { accActivationEmail, passwordResetEmail } from "../utility/sendMail.js";
@@ -19,7 +19,7 @@ export const register = async (req, res, next) => {
     const {
       first_name,
       sur_name,
-      email,
+      auth,
       password,
       gender,
       birth_date,
@@ -28,17 +28,36 @@ export const register = async (req, res, next) => {
     } = req.body;
 
     // form feilds validation
-    if (!first_name || !sur_name || !email || !password) {
+    if (!first_name || !sur_name || !auth || !password) {
       next(createError(404, "All Feids are reqired !"));
     }
 
-    // email validation checking
-    if (!isEmail(email)) {
-      next(createError(404, "Invalid Email !"));
-    }
+    // initial email or mobile data
+    let emailData = null;
+    let mobileData = null;
 
+    // email validation checking
+    if (isEmail(auth)) {
+      emailData = auth;
+      // email checking
+      const emailCheck = await User.findOne({ email: auth });
+      if (emailCheck) {
+        next(createError(404, "Email already exits !"));
+      }
+    } else if (isMobile(auth)) {
+      mobileData = auth;
+      // mobile checking
+      const mobileCheck = await User.findOne({ mobile: auth });
+      if (mobileCheck) {
+        next(createError(404, "Mobile already exits !"));
+      }
+    } else {
+      // next(createError(404, "Invalid Email !"));
+      console.log("invalid");
+    }
+    return;
     // valid user checking
-    const emailUser = await User.findOne({ email });
+    const emailUser = await User.findOne({ auth });
 
     // valid user checking
     if (emailUser) {
@@ -60,9 +79,10 @@ export const register = async (req, res, next) => {
     const user = await User.create({
       first_name,
       sur_name,
-      email,
       password: hasPassword(password),
       access_token: activationCode,
+      email: auth,
+      mobile: auth,
       gender,
       birth_date,
       birth_month,

@@ -107,7 +107,7 @@ const RegisterModal = ({ setRegModal }) => {
           {
             first_name: input.fname,
             sur_name: input.sname,
-            email: input.mobileOrEmail,
+            auth: input.mobileOrEmail,
             password: input.password,
             gender: input.gender,
             birth_date: input.fbDay,
