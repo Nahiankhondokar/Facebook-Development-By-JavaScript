@@ -6,6 +6,7 @@ import { createToken, tokenVerify } from "../utility/token.js";
 import { accActivationEmail, passwordResetEmail } from "../utility/sendMail.js";
 import { randomCode } from "../utility/math.js";
 import JWT from "jsonwebtoken";
+import { sendRegistrationOTP } from "../utility/sendSMS.js";
 
 /**
  *  @access Public
@@ -52,16 +53,8 @@ export const register = async (req, res, next) => {
         next(createError(404, "Mobile already exits !"));
       }
     } else {
-      // next(createError(404, "Invalid Email !"));
-      console.log("invalid");
-    }
-    return;
-    // valid user checking
-    const emailUser = await User.findOne({ auth });
-
-    // valid user checking
-    if (emailUser) {
-      next(createError(404, "Eamil alredy exists !"));
+      next(createError(404, "Invalid Email !"));
+      // console.log("invalid");
     }
 
     // create activation code
@@ -81,37 +74,62 @@ export const register = async (req, res, next) => {
       sur_name,
       password: hasPassword(password),
       access_token: activationCode,
-      email: auth,
-      mobile: auth,
+      email: emailData,
+      mobile: mobileData,
       gender,
       birth_date,
       birth_month,
       birth_year,
     });
 
-    // create activation token
-    const activateToken = createToken({ id: user._id }, "30d");
-
-    // send mail
-    accActivationEmail(user.email, {
-      name: user.first_name + " " + user.sur_name,
-      link: `${
-        process.env.APP_URL + ":" + process.env.PORT
-      }/api/v1/user/activate/${activateToken}`,
-      code: activationCode,
-    });
-
     // user created message
     if (user) {
-      res
-        .status(200)
-        .cookie("email", user.email, {
-          expires: new Date(Date.now() + 1000 * 60 * 15),
-        })
-        .json({
-          message: "user created",
-          user: user,
+      // if it's email
+      if (emailData) {
+        // create activation token
+        const activateToken = createToken({ id: user._id }, "30d");
+
+        // send mail to user
+        accActivationEmail(user.email, {
+          name: user.first_name + " " + user.sur_name,
+          link: `${
+            process.env.APP_URL + ":" + process.env.PORT
+          }/api/v1/user/activate/${activateToken}`,
+          code: activationCode,
         });
+
+        // send confirmation message to user
+        res
+          .status(200)
+          .cookie("email", user.email, {
+            expires: new Date(Date.now() + 1000 * 60 * 15),
+          })
+          .json({
+            message: "user created",
+            user: user,
+          });
+      }
+
+      // if it's Mobile Number
+      if (mobileData) {
+        // sms data
+        let userName = user.first_name + " " + user.sur_name;
+        let OPTsms = `Hi ${userName} you OTP code is : ${activationCode}`;
+
+        // send activation OTP
+        sendRegistrationOTP(OPTsms, user.mobile);
+
+        // send confirmation message to user
+        res
+          .status(200)
+          .cookie("email", user.mobile, {
+            expires: new Date(Date.now() + 1000 * 60 * 15),
+          })
+          .json({
+            message: "user created",
+            user: user,
+          });
+      }
     }
   } catch (error) {
     next(error);
@@ -223,8 +241,8 @@ export const accountActivateByCode = async (req, res, next) => {
     // get activation code
     const { code, email } = req.body;
 
-    // get inactivete user
-    const user = await User.findOne({ email });
+    // get inactivete user (email : email/mobile)
+    const user = await User.findOne().or([{ email: email }, { mobile: email }]);
 
     // validation checking
     if (!user) {
