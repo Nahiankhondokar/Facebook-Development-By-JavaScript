@@ -93,7 +93,7 @@ export const ResendEmail = (email) => async (dispatch) => {
   try {
     await axios
       .post("/api/v1/user/resend-activation-email", {
-        email: email,
+        auth: email,
       })
       .then((res) => {
         CreateToaster(res.data.message, "success");

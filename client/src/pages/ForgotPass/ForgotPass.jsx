@@ -11,22 +11,20 @@ const ForgotPass = () => {
         <div className="reset-wraper">
           <div className="reset-box">
             <div className="reset-box-header">
-              <span className="title">Find Your Account</span>
+              <span className="title">Reset your password</span>
             </div>
             <div className="reset-body">
-              <p>
-                Please enter your email address or phone number to search your
-                account.
-              </p>
-              <div className="code-box">
-                <input type="text" placeholder="Enter Your Email or Mobile" />
+              <div className="find-user-account">
+                <img src="./assets/images/user.png" alt="" />
+                <span>Asraful Haque</span>
+                <p>To reset your account password, please continue</p>
               </div>
             </div>
             <div className="reset-footer">
-              <a href="#">Didn't get a code?</a>
+              <a href="#"></a>
               <div className="reset-btns">
-                <Link className="cancel" to="/">
-                  Cancel
+                <Link className="cancel" to="/find-account">
+                  Not you ?
                 </Link>
                 <a className="continue" href="#">
                   Continue
@@ -36,6 +34,7 @@ const ForgotPass = () => {
           </div>
         </div>
       </div>
+
       <Footer />
     </>
   );

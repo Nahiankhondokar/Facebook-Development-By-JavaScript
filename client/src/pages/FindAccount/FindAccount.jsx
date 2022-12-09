@@ -11,30 +11,31 @@ const FindAccount = () => {
         <div className="reset-wraper">
           <div className="reset-box">
             <div className="reset-box-header">
-              <span className="title">Reset your password</span>
+              <span className="title">Find Your Account</span>
             </div>
             <div className="reset-body">
-              <div className="find-user-account">
-                <img src="./assets/images/user.png" alt="" />
-                <span>Asraful Haque</span>
-                <p>To reset your account password, please continue</p>
+              <p>
+                Please enter your email address or phone number to search your
+                account.
+              </p>
+              <div className="code-box">
+                <input type="text" placeholder="Enter Your Email or Mobile" />
               </div>
             </div>
             <div className="reset-footer">
-              <a href="#"></a>
+              <a href="#">Didn't get a code?</a>
               <div className="reset-btns">
                 <Link className="cancel" to="/">
-                  Not you ?
+                  Cancel
                 </Link>
-                <a className="continue" href="#">
-                  Continue
-                </a>
+                <Link className="continue" to="/forgot-password">
+                  Search
+                </Link>
               </div>
             </div>
           </div>
         </div>
       </div>
-
       <Footer />
     </>
   );

@@ -6,7 +6,7 @@ import { createToken, tokenVerify } from "../utility/token.js";
 import { accActivationEmail, passwordResetEmail } from "../utility/sendMail.js";
 import { randomCode } from "../utility/math.js";
 import JWT from "jsonwebtoken";
-import { sendRegistrationOTP } from "../utility/sendSMS.js";
+import { sendOTP } from "../utility/sendSMS.js";
 
 /**
  *  @access Public
@@ -117,7 +117,7 @@ export const register = async (req, res, next) => {
         let OPTsms = `Hi ${userName} you OTP code is : ${activationCode}`;
 
         // send activation OTP
-        sendRegistrationOTP(OPTsms, user.mobile);
+        sendOTP(OPTsms, user.mobile);
 
         // send confirmation message to user
         res
@@ -420,50 +420,100 @@ export const passwordResetByLink = async (req, res, next) => {
 export const resendAccActivateEmail = async (req, res, next) => {
   try {
     // get all form data
-    const { email } = req.body;
-    // console.log(email);
+    const { auth } = req.body;
 
-    // inactivate user checking
-    const emailUser = await User.findOne().and([
-      { isActivate: false },
-      { email: email },
-    ]);
-
-    // validation
-    if (!emailUser) {
-      next(createError(404, "Email Not Exists!"));
-    }
+    // initial email or mobile data
+    let emailData = null;
+    let mobileData = null;
 
     // create activation code
     let activationCode = randomCode(10000, 99999);
 
-    // user accesss token update
-    await User.findByIdAndUpdate(emailUser._id, {
-      access_token: activationCode,
-    });
+    // email validation checking
+    if (isEmail(auth)) {
+      // get data
+      emailData = auth;
+      // inactivate user checking
+      const emailUser = await User.findOne({ email: auth });
 
-    // create activation token
-    const activateToken = createToken({ id: emailUser._id }, "30d");
+      // validation
+      if (!emailUser) {
+        next(createError(404, "Email User Not Found"));
+      }
+      if (emailUser.isActivate) {
+        next(createError(404, "Account already activated"));
+      }
 
-    // send mail
-    accActivationEmail(emailUser.email, {
-      name: emailUser.first_name + " " + emailUser.sur_name,
-      link: `${
-        process.env.APP_URL + ":" + process.env.PORT
-      }/api/v1/user/activate/${activateToken}`,
-      code: activationCode,
-    });
+      // message resend to user & update access token
+      if (emailUser) {
+        // create activation token
+        const activateToken = createToken({ id: emailUser._id }, "30d");
 
-    // user created message
-    if (emailUser) {
-      res
-        .status(200)
-        .cookie("email", emailUser.email, {
-          expires: new Date(Date.now() + 1000 * 60 * 15),
-        })
-        .json({
-          message: "Activation Email Has Been Sent",
+        // send mail
+        accActivationEmail(emailUser.email, {
+          name: emailUser.first_name + " " + emailUser.sur_name,
+          link: `${
+            process.env.APP_URL + ":" + process.env.PORT
+          }/api/v1/user/activate/${activateToken}`,
+          code: activationCode,
         });
+
+        // user accesss token update
+        await User.findByIdAndUpdate(emailUser._id, {
+          access_token: activationCode,
+        });
+
+        // send confirmation message to user
+        res
+          .status(200)
+          .cookie("email", emailUser.email, {
+            expires: new Date(Date.now() + 1000 * 60 * 15),
+          })
+          .json({
+            message: "Activation Email Has Been Sent",
+          });
+      }
+    } else if (isMobile(auth)) {
+      mobileData = auth;
+      // inactivate user checking
+      const mobileUser = await User.findOne({ mobile: auth });
+
+      // validation
+      if (!mobileUser) {
+        next(createError(404, "Mobile User Not Found"));
+      }
+      if (mobileUser.isActivate) {
+        next(createError(404, "Mobile Account already activated"));
+      }
+
+      // if it's Mobile Number
+      if (mobileData) {
+        // sms data
+        let userName = mobileUser.first_name + " " + mobileUser.sur_name;
+        let OPTsms = `Hi ${userName} you OTP code is : ${activationCode}`;
+
+        // send activation OTP to mobile
+        sendOTP(OPTsms, mobileUser.mobile);
+
+        // send confirmation message to user
+        res
+          .status(200)
+          .cookie("email", mobileUser.mobile, {
+            expires: new Date(Date.now() + 1000 * 60 * 15),
+          })
+          .json({
+            message: "New Activation OTP Sent",
+            user: mobileUser,
+          });
+      }
+
+      // user accesss token update
+      await User.findByIdAndUpdate(mobileUser._id, {
+        access_token: activationCode,
+      });
+    } else {
+      next(createError(404, "Invalid Request !"));
+      // console.log("invalid");
     }
   } catch (error) {
     next(error);
