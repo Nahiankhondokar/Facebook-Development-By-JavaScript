@@ -584,3 +584,108 @@ export const findUserAccount = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ *  @access Public
+ *  @route api/User/resend-accActivateEmail
+ *  @method POST
+ */
+export const sendPasswordResetOTP = async (req, res, next) => {
+  try {
+    // get all form data
+    const { auth } = req.body;
+
+    console.log(auth);
+
+    // initial email or mobile data
+    let emailData = null;
+    let mobileData = null;
+
+    // create activation code
+    let activationCode = randomCode(10000, 99999);
+
+    // email validation checking
+    if (isEmail(auth)) {
+      // get data
+      emailData = auth;
+      // inactivate user checking
+      const emailUser = await User.findOne({ email: auth });
+
+      // validation
+      if (!emailUser) {
+        next(createError(404, "Email User Not Found"));
+      }
+
+      // message resend to user & update access token
+      if (emailUser) {
+        // create activation token
+        const activateToken = createToken({ id: emailUser._id }, "30d");
+
+        // send mail
+        accActivationEmail(emailUser.email, {
+          name: emailUser.first_name + " " + emailUser.sur_name,
+          link: `${
+            process.env.APP_URL + ":" + process.env.PORT
+          }/api/v1/user/activate/${activateToken}`,
+          code: activationCode,
+        });
+
+        // user accesss token update
+        await User.findByIdAndUpdate(emailUser._id, {
+          access_token: activationCode,
+        });
+
+        // send confirmation message to user
+        res
+          .status(200)
+          .cookie("email", emailUser.email, {
+            expires: new Date(Date.now() + 1000 * 60 * 15),
+          })
+          .json({
+            message: "Activation Email Has Been Sent",
+          });
+      }
+    } else if (isMobile(auth)) {
+      mobileData = auth;
+      // inactivate user checking
+      const mobileUser = await User.findOne({ mobile: auth });
+
+      // validation
+      if (!mobileUser) {
+        next(createError(404, "Mobile User Not Found"));
+      }
+
+      // if it's Mobile Number
+      if (mobileData) {
+        // sms data
+        let userName = mobileUser.first_name + " " + mobileUser.sur_name;
+        let OPTsms = `Hi ${userName} you OTP code is : ${activationCode}`;
+
+        // send activation OTP to mobile
+        sendOTP(OPTsms, mobileUser.mobile);
+
+        // send confirmation message to user
+        res
+          .status(200)
+          .cookie("email", mobileUser.mobile, {
+            expires: new Date(Date.now() + 1000 * 60 * 15),
+          })
+          .json({
+            message: "New Activation OTP Sent",
+            user: mobileUser,
+          });
+      }
+
+      // user accesss token update
+      await User.findByIdAndUpdate(mobileUser._id, {
+        access_token: activationCode,
+      });
+    } else {
+      next(createError(404, "Invalid Request !"));
+      // console.log("invalid");
+    }
+  } catch (error) {
+    next(error);
+    // console.log(error);
+  }
+};
