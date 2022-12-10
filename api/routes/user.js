@@ -8,6 +8,7 @@ import {
   passwordResetByLink,
   register,
   resendAccActivateEmail,
+  findUserAccount,
 } from "../controllers/userController.js";
 
 // initialize
@@ -22,6 +23,7 @@ router.post("/activate-code", accountActivateByCode);
 router.post("/resend-activation-email", resendAccActivateEmail);
 router.post("/forgot-password", forgotPassword);
 router.post("/forgot-password/:token", passwordResetByLink);
+router.post("/find-user-account", findUserAccount);
 
 // export moudle
 export default router;

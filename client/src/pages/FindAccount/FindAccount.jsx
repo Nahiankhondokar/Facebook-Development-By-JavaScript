@@ -1,9 +1,43 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
+import axios from "axios";
+import CreateToaster from "../../utility/Toaster";
 
 const FindAccount = () => {
+  // input state
+  const [auth, setAuth] = useState("");
+
+  // navigate
+  const navigate = useNavigate();
+
+  // handle input data
+  const handleInputData = (e) => {
+    setAuth(e.target.value);
+  };
+
+  // handle find user
+  const handleFindUser = (e) => {
+    e.preventDefault();
+
+    // validation & data send
+    if (!auth) {
+      CreateToaster("Feild is required", "error");
+    } else {
+      axios
+        .post("/api/v1/user/find-user-account", { auth })
+        .then((res) => {
+          // console.log(res.data);
+          navigate("/forgot-password");
+        })
+        .catch((error) => {
+          CreateToaster(error.response.data.message, "error");
+        });
+    }
+  };
+
   return (
     <>
       <Header />
@@ -19,7 +53,12 @@ const FindAccount = () => {
                 account.
               </p>
               <div className="code-box">
-                <input type="text" placeholder="Enter Your Email or Mobile" />
+                <input
+                  type="text"
+                  placeholder="Enter Your Email or Mobile"
+                  value={auth}
+                  onChange={handleInputData}
+                />
               </div>
             </div>
             <div className="reset-footer">
@@ -28,9 +67,9 @@ const FindAccount = () => {
                 <Link className="cancel" to="/">
                   Cancel
                 </Link>
-                <Link className="continue" to="/forgot-password">
+                <a className="continue" href="#" onClick={handleFindUser}>
                   Search
-                </Link>
+                </a>
               </div>
             </div>
           </div>

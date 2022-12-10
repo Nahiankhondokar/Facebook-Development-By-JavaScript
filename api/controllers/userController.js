@@ -520,3 +520,67 @@ export const resendAccActivateEmail = async (req, res, next) => {
     // console.log(error);
   }
 };
+
+/**
+ *  @access Public
+ *  @route api/User/find-user-account for reset password
+ *  @method POST
+ */
+export const findUserAccount = async (req, res, next) => {
+  const { auth } = req.body;
+  try {
+    // email validation checking
+    if (isEmail(auth)) {
+      // email checking
+      const emailCheck = await User.findOne({ email: auth });
+      if (!emailCheck) {
+        next(createError(404, "Email not found !"));
+      } else {
+        res
+          .status(200)
+          .cookie(
+            "user",
+            JSON.stringify({
+              name: emailCheck.first_name + " " + emailCheck.sur_name,
+              email: emailCheck.email,
+              photo: emailCheck.profile_photo,
+            }),
+            {
+              expires: new Date(Date.now() + 1000 * 60 * 15),
+            }
+          )
+          .json({
+            user: emailCheck,
+          });
+      }
+    } else if (isMobile(auth)) {
+      // mobile checking
+      const mobileCheck = await User.findOne({ mobile: auth });
+      if (!mobileCheck) {
+        next(createError(404, "Mobile not found !"));
+      } else {
+        res
+          .status(200)
+          .cookie(
+            "user",
+            JSON.stringify({
+              name: mobileCheck.first_name + " " + mobileCheck.sur_name,
+              mobile: mobileCheck.mobile,
+              photo: mobileCheck.profile_photo,
+            }),
+            {
+              expires: new Date(Date.now() + 1000 * 60 * 15),
+            }
+          )
+          .json({
+            user: mobileCheck,
+          });
+      }
+    } else {
+      next(createError(404, "Invalid Email or Mobile !"));
+      // console.log("invalid");
+    }
+  } catch (error) {
+    next(error);
+  }
+};
