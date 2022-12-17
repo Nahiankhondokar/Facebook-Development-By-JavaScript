@@ -1,9 +1,12 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import facebook from "../../assets/icons/facebook.svg";
 import Footer from "../../components/Footer/Footer";
-import { AccountActivateByCode, ResendEmail } from "../../redux/auth/action";
+import {
+  AccountActivateByCode,
+  CheckResetPasswordAccount,
+  ResendEmail,
+} from "../../redux/auth/action";
 import { useState } from "react";
 import Cookie from "js-cookie";
 import "../../assets/css/style.css";
@@ -11,6 +14,10 @@ import CreateToaster from "../../utility/Toaster";
 import Header from "../../components/Header/Header";
 
 const Activation = () => {
+  // params
+  const { key } = useParams();
+  // console.log(key);
+
   // navigaet
   const navigate = useNavigate();
 
@@ -53,6 +60,17 @@ const Activation = () => {
     dispatch(ResendEmail(activationEmail));
   };
 
+  // check reset password Account
+  const handleCheckResetPass = (e) => {
+    e.preventDefault();
+    // validation
+    if (!code) {
+      CreateToaster("Activation Code is required", "warn");
+    } else {
+      dispatch(CheckResetPasswordAccount(code, activationEmail, navigate));
+    }
+  };
+
   // use effect hook
   useEffect(() => {
     if (!activationEmail) {
@@ -67,7 +85,7 @@ const Activation = () => {
         <div className="reset-wraper">
           <div className="reset-box">
             <div className="reset-box-header">
-              <span className="title">Enter security code</span>
+              <span className="title">Enter Activation code</span>
             </div>
             <div className="reset-body">
               <p>
@@ -99,7 +117,11 @@ const Activation = () => {
                   Cancel
                 </a>
                 <a
-                  onClick={handleAccActivateByCode}
+                  onClick={
+                    key == "account"
+                      ? handleAccActivateByCode
+                      : handleCheckResetPass
+                  }
                   className="continue"
                   href="#"
                 >

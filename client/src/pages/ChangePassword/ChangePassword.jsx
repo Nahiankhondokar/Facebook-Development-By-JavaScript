@@ -1,9 +1,40 @@
+import Cookies from "js-cookie";
 import React from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
+import { PasswordReset } from "../../redux/auth/action";
 
 const ChangePassword = () => {
+  // dispatch
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  // password state
+  const [password, setPassword] = useState({
+    pass: "",
+  });
+
+  // handle Input Data
+  const handleInputData = (e) => {
+    setPassword({
+      ...password,
+      pass: e.target.value,
+    });
+  };
+
+  // get data form cookies
+  const id = Cookies.get("cpid");
+  const code = Cookies.get("code");
+
+  // reset password
+  const handleResetPassword = (e) => {
+    e.preventDefault();
+    dispatch(PasswordReset(code, id, password.pass, navigate));
+  };
+
   return (
     <>
       <Header />
@@ -24,6 +55,8 @@ const ChangePassword = () => {
                   className="w-100"
                   type="text"
                   placeholder="New password"
+                  value={password.pass}
+                  onChange={handleInputData}
                 />
               </div>
             </div>
@@ -33,7 +66,7 @@ const ChangePassword = () => {
                 <Link className="cancel" to="/">
                   Skip
                 </Link>
-                <a className="continue" href="#">
+                <a className="continue" href="#" onClick={handleResetPassword}>
                   Continue
                 </a>
               </div>

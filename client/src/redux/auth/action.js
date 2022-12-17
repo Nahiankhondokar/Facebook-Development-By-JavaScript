@@ -6,6 +6,7 @@ import {
   REGISTER_REQUEST,
   REGISTER_SUCCESS,
 } from "./actionType";
+import Cookies from "js-cookie";
 
 // user register
 export const UserRegister =
@@ -42,7 +43,7 @@ export const UserRegister =
           setRegModal(false);
 
           // navigate to account activation page
-          navigate("/activation");
+          navigate("/activation/account");
         })
         .catch((e) => {
           // error message
@@ -88,6 +89,32 @@ export const AccountActivateByCode =
     }
   };
 
+// Check Reset password account
+export const CheckResetPasswordAccount =
+  (code, auth, navigate) => async (dispatch) => {
+    try {
+      await axios
+        .post("/api/v1/user/check-password-reset-otp", {
+          code: code,
+          auth,
+        })
+        .then((res) => {
+          CreateToaster("You Can Change You Password", "success");
+
+          // navigate to login page
+          navigate("/change-password");
+
+          // remove cookie
+          Cookie.remove("email");
+        })
+        .catch((error) => {
+          CreateToaster(error.response.data.message, "error");
+        });
+    } catch (error) {
+      CreateToaster(error.response.data.message, "error");
+    }
+  };
+
 // resend email
 export const ResendEmail = (email) => async (dispatch) => {
   try {
@@ -105,3 +132,28 @@ export const ResendEmail = (email) => async (dispatch) => {
     CreateToaster(error.response.data.message, "error");
   }
 };
+
+// reset password
+export const PasswordReset =
+  (code, id, password, navigate) => async (dispatch) => {
+    try {
+      await axios
+        .post("/api/v1/user/password-reset", {
+          id,
+          code,
+          password,
+        })
+        .then((res) => {
+          CreateToaster(res.data.message, "success");
+          navigate("/");
+          Cookie.remove("cpid");
+          Cookie.remove("code");
+          Cookie.remove("user");
+        })
+        .catch((error) => {
+          CreateToaster(error.response.data.message, "error");
+        });
+    } catch (error) {
+      CreateToaster(error.response.data.message, "error");
+    }
+  };

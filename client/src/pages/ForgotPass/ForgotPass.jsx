@@ -39,7 +39,7 @@ const ForgotPass = () => {
     // get data from cookie
     const userInfo = JSON.parse(Cookies.get("user"));
 
-    console.log(userInfo.email);
+    // console.log(userInfo.email);
 
     // send data
     axios
@@ -48,7 +48,7 @@ const ForgotPass = () => {
       })
       .then((res) => {
         CreateToaster("Set password reset OTP", "success");
-        navigate("/activation");
+        navigate("/activation/reset-pass");
       })
       .catch((error) => {
         CreateToaster(error.response.data.message, "error");

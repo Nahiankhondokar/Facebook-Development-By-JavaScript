@@ -5,7 +5,6 @@ import { hasPassword, passwordVerify } from "../utility/hash.js";
 import { createToken, tokenVerify } from "../utility/token.js";
 import { accActivationEmail, passwordResetEmail } from "../utility/sendMail.js";
 import { randomCode } from "../utility/math.js";
-import JWT from "jsonwebtoken";
 import { sendOTP } from "../utility/sendSMS.js";
 
 /**
@@ -683,6 +682,118 @@ export const sendPasswordResetOTP = async (req, res, next) => {
     } else {
       next(createError(404, "Invalid Request !"));
       // console.log("invalid");
+    }
+  } catch (error) {
+    next(error);
+    // console.log(error);
+  }
+};
+
+/**
+ *  @access Public
+ *  @route api/User/check-password-rest-OTP
+ *  @method POST
+ */
+export const checkPasswordResetOTP = async (req, res, next) => {
+  try {
+    // get all form data
+    const { auth, code } = req.body;
+
+    // email validation checking
+    if (isEmail(auth)) {
+      // reset password user checking
+      const emailUser = await User.findOne().and([
+        { email: auth },
+        { access_token: code },
+      ]);
+
+      // validation
+      if (!emailUser) {
+        next(createError(404, "Email User Not Found"));
+      }
+
+      // get reset password user
+      if (emailUser) {
+        // send confirmation message to user
+        res
+          .status(200)
+          .cookie("cpid", emailUser._id.toString(), {
+            expires: new Date(Date.now() + 1000 * 60 * 30),
+          })
+          .cookie("code", code, {
+            expires: new Date(Date.now() + 1000 * 60 * 30),
+          })
+          .json({
+            message: "You Can Change Your Passwrod",
+          });
+      }
+    } else if (isMobile(auth)) {
+      // reset password user checking
+      const mobileUser = await User.findOne().and([
+        { mobile: auth },
+        { access_token: code },
+      ]);
+
+      // validation
+      if (!mobileUser) {
+        next(createError(404, "Email User Not Found"));
+      }
+
+      // get reset password user
+      if (mobileUser) {
+        // send confirmation message to user
+        res
+          .status(200)
+          .cookie("cpid", mobileUser._id.toString(), {
+            expires: new Date(Date.now() + 1000 * 60 * 30),
+          })
+          .cookie("code", code, {
+            expires: new Date(Date.now() + 1000 * 60 * 30),
+          })
+          .json({
+            message: "You Can Change Your Passwrod",
+          });
+      }
+    } else {
+      next(createError(404, "Invalid Request !"));
+      // console.log("invalid");
+    }
+  } catch (error) {
+    next(error);
+    // console.log(error);
+  }
+};
+
+/**
+ *  @access Public
+ *  @route api/User/password-reset
+ *  @method POST
+ */
+export const passwordReset = async (req, res, next) => {
+  try {
+    // get all form data
+    const { id, code, password } = req.body;
+
+    // get data
+    const user = await User.findOne().and([
+      { _id: id },
+      { access_token: code },
+    ]);
+
+    // validation
+    if (!user) {
+      next(createError(404, "User Not Found !"));
+    }
+
+    if (user) {
+      await User.findByIdAndUpdate(id, {
+        password: hasPassword(password),
+        access_token: null,
+      });
+
+      res.status(200).json({
+        message: "Password Changed Successfully",
+      });
     }
   } catch (error) {
     next(error);

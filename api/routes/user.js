@@ -10,6 +10,8 @@ import {
   resendAccActivateEmail,
   findUserAccount,
   sendPasswordResetOTP,
+  checkPasswordResetOTP,
+  passwordReset,
 } from "../controllers/userController.js";
 
 // initialize
@@ -26,6 +28,8 @@ router.post("/forgot-password", forgotPassword);
 router.post("/forgot-password/:token", passwordResetByLink);
 router.post("/find-user-account", findUserAccount);
 router.post("/password-reset-otp", sendPasswordResetOTP);
+router.post("/check-password-reset-otp", checkPasswordResetOTP);
+router.post("/password-reset", passwordReset);
 
 // export moudle
 export default router;
