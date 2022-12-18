@@ -157,3 +157,23 @@ export const PasswordReset =
       CreateToaster(error.response.data.message, "error");
     }
   };
+
+// user login
+export const UserLogin = (auth, password, navigate) => async (dispatch) => {
+  try {
+    await axios
+      .post("/api/v1/user/login", {
+        auth,
+        password,
+      })
+      .then((res) => {
+        CreateToaster(res.data.message, "success");
+        navigate("/home");
+      })
+      .catch((error) => {
+        CreateToaster(error.response.data.message, "error");
+      });
+  } catch (error) {
+    CreateToaster(error.response.data.message, "error");
+  }
+};

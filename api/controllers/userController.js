@@ -144,39 +144,66 @@ export const register = async (req, res, next) => {
 export const login = async (req, res, next) => {
   try {
     // get all form data
-    const { email, password } = req.body;
+    const { auth, password } = req.body;
 
-    // form feilds validation
-    if (!email || !password) {
-      next(createError(404, "All Feids are reqired !"));
-    }
-
-    // email validation checking
-    if (!isEmail(email)) {
-      next(createError(404, "Invalid Email !"));
-    }
-
-    // valid user checking
-    const loginUser = await User.findOne({ email });
-
-    // valid user checking
-    if (!loginUser) {
-      next(createError(404, "User not exists !"));
-    } else {
-      // user password checking
-      if (!passwordVerify(password, loginUser.password)) {
-        next(createError(404, "Wrong Password !"));
-      } else {
-        // create token
-        const token = createToken({ id: loginUser._id }, "365d");
-
-        // user LoggedIn message
-        res.status(200).cookie("authToken", token).json({
-          message: "user LoggedIn Successfully",
-          user: loginUser,
-          token: token,
-        });
+    if (isEmail(auth)) {
+      // form feilds validation
+      if (!auth || !password) {
+        next(createError(404, "All Feids are required !"));
       }
+
+      // valid user checking
+      const loginUser = await User.findOne({ email: auth });
+
+      // valid user checking
+      if (!loginUser) {
+        next(createError(404, "User not exists !"));
+      } else {
+        // user password checking
+        if (!passwordVerify(password, loginUser.password)) {
+          next(createError(404, "Wrong Password !"));
+        } else {
+          // create token
+          const token = createToken({ id: loginUser._id }, "365d");
+
+          // user LoggedIn message
+          res.status(200).cookie("authToken", token).json({
+            message: "User LoggedIn Successfully",
+            user: loginUser,
+            token: token,
+          });
+        }
+      }
+    } else if (isMobile(auth)) {
+      // form feilds validation
+      if (!auth || !password) {
+        next(createError(404, "All Feids are required !"));
+      }
+
+      // valid user checking
+      const loginUser = await User.findOne({ mobile: auth });
+
+      // valid user checking
+      if (!loginUser) {
+        next(createError(404, "User not exists !"));
+      } else {
+        // user password checking
+        if (!passwordVerify(password, loginUser.password)) {
+          next(createError(404, "Wrong Password !"));
+        } else {
+          // create token
+          const token = createToken({ id: loginUser._id }, "365d");
+
+          // user LoggedIn message
+          res.status(200).cookie("authToken", token).json({
+            message: "User LoggedIn Successfully",
+            user: loginUser,
+            token: token,
+          });
+        }
+      }
+    } else {
+      next(createError(404, "Invalid Email or Mobile !"));
     }
   } catch (error) {
     next(error);
