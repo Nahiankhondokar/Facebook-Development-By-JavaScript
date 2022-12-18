@@ -12,18 +12,6 @@ const RegisterModal = ({ setRegModal }) => {
   //navigate
   const navigate = useNavigate();
 
-  // input data state
-  const [input, setInput] = useState({
-    fname: "",
-    sname: "",
-    password: "",
-    mobileOrEmail: "",
-    fbDay: "",
-    fbMonth: "",
-    fbYear: "",
-    gender: "",
-  });
-
   // fb day array
   const fbDay = [
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
@@ -51,6 +39,21 @@ const RegisterModal = ({ setRegModal }) => {
     { length: 70 },
     (_, i) => new Date().getFullYear() - i
   );
+
+  // current date
+  const date = new Date();
+
+  // input data state
+  const [input, setInput] = useState({
+    fname: "",
+    sname: "",
+    password: "",
+    mobileOrEmail: "",
+    fbDay: date.getDate(),
+    fbMonth: fbMonth[date.getMonth()],
+    fbYear: date.getFullYear(),
+    gender: "",
+  });
 
   // input feilds manage
   const handleInputData = (e) => {
@@ -185,21 +188,33 @@ const RegisterModal = ({ setRegModal }) => {
                 <div className="reg-form-select">
                   <select name="fbDay" id="" onChange={handleInputData}>
                     {fbDay.map((item, index) => (
-                      <option value={item} key={index}>
+                      <option
+                        value={item}
+                        key={index}
+                        selected={item === input.fbDay ? true : false}
+                      >
                         {item}
                       </option>
                     ))}
                   </select>
                   <select name="fbMonth" id="" onChange={handleInputData}>
                     {fbMonth.map((item, index) => (
-                      <option value={item} key={index}>
+                      <option
+                        selected={item === input.fbMonth ? true : false}
+                        value={item}
+                        key={index}
+                      >
                         {item}
                       </option>
                     ))}
                   </select>
                   <select name="fbYear" id="" onChange={handleInputData}>
                     {fbYear.map((item, index) => (
-                      <option value={item} key={index}>
+                      <option
+                        value={item}
+                        key={index}
+                        selected={item === input.fbYear ? true : false}
+                      >
                         {item}
                       </option>
                     ))}

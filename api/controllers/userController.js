@@ -621,13 +621,17 @@ export const sendPasswordResetOTP = async (req, res, next) => {
         const activateToken = createToken({ id: emailUser._id }, "30d");
 
         // send mail
-        accActivationEmail(emailUser.email, {
-          name: emailUser.first_name + " " + emailUser.sur_name,
-          link: `${
-            process.env.APP_URL + ":" + process.env.PORT
-          }/api/v1/user/activate/${activateToken}`,
-          code: activationCode,
-        });
+        accActivationEmail(
+          emailUser.email,
+          {
+            name: emailUser.first_name + " " + emailUser.sur_name,
+            link: `${
+              process.env.APP_URL + ":" + process.env.PORT
+            }/api/v1/user/activate/${activateToken}`,
+            code: activationCode,
+          },
+          "Reset Password"
+        );
 
         // user accesss token update
         await User.findByIdAndUpdate(emailUser._id, {
@@ -782,7 +786,7 @@ export const passwordReset = async (req, res, next) => {
 
     // validation
     if (!user) {
-      next(createError(404, "User Not Found !"));
+      return next(createError(404, "User Not Found !"));
     }
 
     if (user) {
@@ -791,9 +795,14 @@ export const passwordReset = async (req, res, next) => {
         access_token: null,
       });
 
-      res.status(200).json({
-        message: "Password Changed Successfully",
-      });
+      return res
+        .clearCookie("code")
+        .clearCookie("cpid")
+        .clearCookie("user")
+        .status(200)
+        .json({
+          message: "Password Changed Successfully",
+        });
     }
   } catch (error) {
     next(error);

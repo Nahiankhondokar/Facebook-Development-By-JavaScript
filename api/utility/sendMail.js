@@ -1,27 +1,28 @@
-import nodemailer from 'nodemailer';
-
+import nodemailer from "nodemailer";
 
 // send account activation email
-export const accActivationEmail = async (to, data) => {
+export const accActivationEmail = async (
+  to,
+  data,
+  title = "Account Activation"
+) => {
+  // create trasporter
+  let transport = nodemailer.createTransport({
+    host: process.env.MAIL_HOST,
+    port: process.env.MAIL_PORT,
+    auth: {
+      user: process.env.MAIL_ID,
+      pass: process.env.MAIL_PASS,
+    },
+  });
 
-    // create trasporter
-    let transport = nodemailer.createTransport({
-        host : process.env.MAIL_HOST,
-        port : process.env.MAIL_PORT,
-        auth : {
-            user : process.env.MAIL_ID,
-            pass : process.env.MAIL_PASS
-        }
-    });
-
-
-    try {
-        await transport.sendMail({
-            from : `Facebook Pro <${process.env.MAIL_ID}>`,
-            subject : `Account Activation`,
-            to : to,
-            text : "",
-            html : `
+  try {
+    await transport.sendMail({
+      from: `Facebook Pro <${process.env.MAIL_ID}>`,
+      subject: `${title}`,
+      to: to,
+      text: "",
+      html: `
             <html>
             <head>
                 <title></title>
@@ -219,38 +220,33 @@ export const accActivationEmail = async (to, data) => {
                 </tr>
             </table>
             </body>
-            </html>`
-
-        });
-        
-    } catch (error) {
-        console.log(error);
-    }
-
-}
-
+            </html>`,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 // send account activation email
 export const passwordResetEmail = async (to, data) => {
+  // create trasporter
+  let transport = nodemailer.createTransport({
+    host: process.env.MAIL_HOST,
+    port: process.env.MAIL_PORT,
+    auth: {
+      user: process.env.MAIL_ID,
+      pass: process.env.MAIL_PASS,
+    },
+  });
 
-    // create trasporter
-    let transport = nodemailer.createTransport({
-        host : process.env.MAIL_HOST,
-        port : process.env.MAIL_PORT,
-        auth : {
-            user : process.env.MAIL_ID,
-            pass : process.env.MAIL_PASS
-        }
-    });
-
-    // send mail to user with template
-    try {
-        await transport.sendMail({
-            from : `Facebook Pro <${process.env.MAIL_ID}>`,
-            subject : `Reset Password `,
-            to : to,
-            text : "",
-            html : `
+  // send mail to user with template
+  try {
+    await transport.sendMail({
+      from: `Facebook Pro <${process.env.MAIL_ID}>`,
+      subject: `Reset Password `,
+      to: to,
+      text: "",
+      html: `
             <html>
             <head>
                 <title></title>
@@ -448,12 +444,9 @@ export const passwordResetEmail = async (to, data) => {
                 </tr>
             </table>
             </body>
-            </html>`
-
-        });
-        
-    } catch (error) {
-        console.log(error);
-    }
-
-}
+            </html>`,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
