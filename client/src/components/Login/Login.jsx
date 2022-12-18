@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { UserLogin } from "../../redux/auth/action";
+import CreateToaster from "../../utility/Toaster";
 
 const Login = ({ setRegModal }) => {
   // dispatch or navigate
@@ -26,7 +27,12 @@ const Login = ({ setRegModal }) => {
   // handle form submit
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    dispatch(UserLogin(input.auth, input.password, navigate));
+    // validation
+    if (!input.auth && !input.password) {
+      CreateToaster("All Feilds are required !");
+    } else {
+      dispatch(UserLogin(input.auth, input.password, navigate));
+    }
   };
 
   return (

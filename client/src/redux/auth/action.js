@@ -2,11 +2,15 @@ import axios from "axios";
 import CreateToaster from "../../utility/Toaster";
 import Cookie from "js-cookie";
 import {
+  LOGIN_FAILED,
+  LOGIN_REQUEST,
+  LOGIN_SUCCESS,
   REGISTER_FAILED,
   REGISTER_REQUEST,
   REGISTER_SUCCESS,
 } from "./actionType";
 import Cookies from "js-cookie";
+import { LOADER_START } from "../top-loader/loaderTypes";
 
 // user register
 export const UserRegister =
@@ -161,16 +165,33 @@ export const PasswordReset =
 // user login
 export const UserLogin = (auth, password, navigate) => async (dispatch) => {
   try {
+    // dispatch call
+    dispatch({
+      type: LOGIN_REQUEST,
+    });
+    dispatch({
+      type: LOADER_START,
+    });
+    // user login
     await axios
       .post("/api/v1/user/login", {
         auth,
         password,
       })
       .then((res) => {
+        // dispatch call
+        dispatch({
+          type: LOGIN_SUCCESS,
+          payload: res.data.user,
+        });
         CreateToaster(res.data.message, "success");
         navigate("/home");
       })
       .catch((error) => {
+        // dispatch call
+        dispatch({
+          type: LOGIN_FAILED,
+        });
         CreateToaster(error.response.data.message, "error");
       });
   } catch (error) {

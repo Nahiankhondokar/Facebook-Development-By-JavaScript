@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 
 const Home = () => {
+  // states
+  const [postInfo, setPostInfo] = useState(false);
   return (
     <>
       <div className="fb-home-header">
@@ -337,67 +339,71 @@ const Home = () => {
                   </div>
                 </div>
                 <div className="post-menu">
-                  <div className="post-dropdown-menu">
-                    <ul>
-                      <li>
-                        <a href="#">
-                          <div className="menu-icon"></div>
-                          <span>Save post</span>
-                        </a>
-                      </li>
-                      <li className="divid"></li>
-                      <li>
-                        <a href="#">
-                          <div className="menu-icon"></div>
-                          <span>Embeded</span>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#">
-                          <div className="menu-icon"></div>
-                          <span>Who can comment on this post ?</span>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#">
-                          <div className="menu-icon"></div>
-                          <span>Edit view history</span>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#">
-                          <div className="menu-icon"></div>
-                          <span>Turn off notification</span>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#">
-                          <div className="menu-icon"></div>
-                          <span>turn off translation</span>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#">
-                          <div className="menu-icon"></div>
-                          <span>Copy link</span>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#">
-                          <div className="menu-icon"></div>
-                          <span>Edit post</span>
-                        </a>
-                      </li>
-                      <li className="divid"></li>
-                      <li>
-                        <a href="#">
-                          <div className="menu-icon"></div>
-                          <span>Move trash</span>
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                  <button>
+                  {postInfo == true ? (
+                    <div className="post-dropdown-menu">
+                      <ul>
+                        <li>
+                          <a href="#">
+                            <div className="menu-icon"></div>
+                            <span>Save post</span>
+                          </a>
+                        </li>
+                        <li className="divid"></li>
+                        <li>
+                          <a href="#">
+                            <div className="menu-icon"></div>
+                            <span>Embeded</span>
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#">
+                            <div className="menu-icon"></div>
+                            <span>Who can comment on this post ?</span>
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#">
+                            <div className="menu-icon"></div>
+                            <span>Edit view history</span>
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#">
+                            <div className="menu-icon"></div>
+                            <span>Turn off notification</span>
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#">
+                            <div className="menu-icon"></div>
+                            <span>turn off translation</span>
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#">
+                            <div className="menu-icon"></div>
+                            <span>Copy link</span>
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#">
+                            <div className="menu-icon"></div>
+                            <span>Edit post</span>
+                          </a>
+                        </li>
+                        <li className="divid"></li>
+                        <li>
+                          <a href="#">
+                            <div className="menu-icon"></div>
+                            <span>Move trash</span>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  <button onClick={() => setPostInfo(true)}>
                     <svg
                       fill="currentColor"
                       viewBox="0 0 20 20"
