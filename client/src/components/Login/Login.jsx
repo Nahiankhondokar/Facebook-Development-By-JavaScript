@@ -18,7 +18,7 @@ const Login = ({ setRegModal }) => {
   // input data manage
   const handleInputData = (e) => {
     setInput((prevState) => ({
-      ...input,
+      ...prevState,
       [e.target.name]: e.target.value,
     }));
   };
