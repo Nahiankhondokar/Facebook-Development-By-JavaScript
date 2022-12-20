@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import crossBtn from "../../assets/icons/cross.png";
 import { UserRegister } from "../../redux/auth/action";
 import CreateToaster from "../../utility/Toaster";
+import { AiFillExclamationCircle } from "react-icons/ai";
 
 const RegisterModal = ({ setRegModal }) => {
   // dispatch
@@ -55,6 +56,14 @@ const RegisterModal = ({ setRegModal }) => {
     gender: "",
   });
 
+  // tooltip state
+  const [tooltip, setTooltip] = useState({
+    fname: false,
+    sname: false,
+    mobileOrEmail: false,
+    password: false,
+  });
+
   // input feilds manage
   const handleInputData = (e) => {
     setInput((prev) => ({
@@ -67,26 +76,56 @@ const RegisterModal = ({ setRegModal }) => {
   const [validate, setValidate] = useState({
     fname: false,
     sname: false,
-    email: false,
     mobileOrEmail: false,
+    gender: false,
+    password: false,
+    dob: false,
   });
 
-  // handle input validate
+  // handle input border validate
   const handleInputValidate = (e) => {
     const feildName = e.target.name;
-    // console.log(input[feildName]);
+    // console.log(feildName);
 
     // validaition
     if (!input[feildName]) {
+      // border validation
       setValidate((prev) => ({
         ...prev,
         [feildName]: true,
       }));
+
+      // tooltip validation
+      setTooltip({
+        ...tooltip,
+        [feildName]: false,
+      });
     } else {
+      // border validation
       setValidate((prev) => ({
         ...prev,
         [feildName]: false,
       }));
+    }
+  };
+
+  // handle tooltip
+  const handleTooltip = (e) => {
+    const feildName = e.target.name;
+    // console.log(feildName);
+
+    if (validate[feildName] === true) {
+      // border validation
+      setValidate((prev) => ({
+        ...prev,
+        [feildName]: false,
+      }));
+
+      // tooltip validation
+      setTooltip({
+        ...tooltip,
+        [feildName]: true,
+      });
     }
   };
 
@@ -103,6 +142,14 @@ const RegisterModal = ({ setRegModal }) => {
       !input.gender
     ) {
       CreateToaster("All Feilds Are Require");
+      setValidate({
+        fname: true,
+        sname: true,
+        password: true,
+        mobileOrEmail: true,
+        gender: true,
+        dob: true,
+      });
     } else {
       // user register
       dispatach(
@@ -150,7 +197,19 @@ const RegisterModal = ({ setRegModal }) => {
                   value={input.fname}
                   name="fname"
                   onBlur={handleInputValidate}
+                  onFocus={handleTooltip}
                 />
+                {validate.fname && (
+                  <span className="exclamation-sign-fname">
+                    <AiFillExclamationCircle />
+                  </span>
+                )}
+                {tooltip.fname && (
+                  <span className="tooltip-fname">
+                    <div className="tooltip-arrow-sign"></div>
+                    <p>What's your name ?</p>
+                  </span>
+                )}
                 <input
                   className={validate.sname && "error-border"}
                   type="text"
@@ -159,8 +218,22 @@ const RegisterModal = ({ setRegModal }) => {
                   value={input.sname}
                   name="sname"
                   onBlur={handleInputValidate}
+                  onFocus={handleTooltip}
                 />
+                {validate.sname && (
+                  <span className="exclamation-sign-sname">
+                    <AiFillExclamationCircle />
+                  </span>
+                )}
+
+                {tooltip.sname && (
+                  <span className="tooltip-sname">
+                    <div className="tooltip-arrow-sign"></div>
+                    <p>What's your surname ?</p>
+                  </span>
+                )}
               </div>
+
               <div className="reg-form">
                 <input
                   className={validate.mobileOrEmail && "error-border"}
@@ -170,7 +243,19 @@ const RegisterModal = ({ setRegModal }) => {
                   value={input.mobileOrEmail}
                   name="mobileOrEmail"
                   onBlur={handleInputValidate}
+                  onFocus={handleTooltip}
                 />
+                {validate.mobileOrEmail && (
+                  <span className="exclamation-sign-mobileOrEmail">
+                    <AiFillExclamationCircle />
+                  </span>
+                )}
+                {tooltip.mobileOrEmail && (
+                  <span className="tooltip-mobileOrEmail">
+                    <div className="tooltip-arrow-sign"></div>
+                    <p>What's your Email, Mobile ?</p>
+                  </span>
+                )}
               </div>
               <div className="reg-form">
                 <input
@@ -181,12 +266,37 @@ const RegisterModal = ({ setRegModal }) => {
                   value={input.password}
                   name="password"
                   onBlur={handleInputValidate}
+                  onFocus={handleTooltip}
                 />
+                {validate.password && (
+                  <span className="exclamation-sign-password">
+                    <AiFillExclamationCircle />
+                  </span>
+                )}
+                {tooltip.password && (
+                  <span className="tooltip-password">
+                    <div className="tooltip-arrow-sign"></div>
+                    <p>What's your password ?</p>
+                  </span>
+                )}
               </div>
               <div className="reg-form">
-                <span>Date of birth</span>
+                <span>
+                  Date of birth
+                  {validate.dob && (
+                    <span className="exclamation-sign-dob">
+                      <AiFillExclamationCircle />
+                    </span>
+                  )}
+                </span>
+
                 <div className="reg-form-select">
-                  <select name="fbDay" id="" onChange={handleInputData}>
+                  <select
+                    name="fbDay"
+                    id=""
+                    onChange={handleInputData}
+                    className={validate.dob && "error-border"}
+                  >
                     {fbDay.map((item, index) => (
                       <option
                         value={item}
@@ -197,7 +307,13 @@ const RegisterModal = ({ setRegModal }) => {
                       </option>
                     ))}
                   </select>
-                  <select name="fbMonth" id="" onChange={handleInputData}>
+
+                  <select
+                    name="fbMonth"
+                    id=""
+                    onChange={handleInputData}
+                    className={validate.dob && "error-border"}
+                  >
                     {fbMonth.map((item, index) => (
                       <option
                         selected={item === input.fbMonth ? true : false}
@@ -208,7 +324,12 @@ const RegisterModal = ({ setRegModal }) => {
                       </option>
                     ))}
                   </select>
-                  <select name="fbYear" id="" onChange={handleInputData}>
+                  <select
+                    name="fbYear"
+                    id=""
+                    onChange={handleInputData}
+                    className={validate.dob && "error-border"}
+                  >
                     {fbYear.map((item, index) => (
                       <option
                         value={item}
@@ -223,9 +344,16 @@ const RegisterModal = ({ setRegModal }) => {
               </div>
 
               <div className="reg-form">
-                <span>Gender</span>
+                <span>
+                  Gender
+                  {validate.dob && (
+                    <span className="exclamation-sign-gender">
+                      <AiFillExclamationCircle />
+                    </span>
+                  )}
+                </span>
                 <div className="reg-form-select">
-                  <label>
+                  <label className={validate.gender && "error-border"}>
                     Female
                     <input
                       type="radio"
@@ -234,7 +362,7 @@ const RegisterModal = ({ setRegModal }) => {
                       onChange={handleInputData}
                     />
                   </label>
-                  <label>
+                  <label className={validate.gender && "error-border"}>
                     Male
                     <input
                       type="radio"
@@ -243,7 +371,7 @@ const RegisterModal = ({ setRegModal }) => {
                       onChange={handleInputData}
                     />
                   </label>
-                  <label>
+                  <label className={validate.gender && "error-border"}>
                     Custom
                     <input
                       type="radio"

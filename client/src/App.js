@@ -10,6 +10,7 @@ import LoadingBar from "react-top-loading-bar";
 import ChangePassword from "./pages/ChangePassword/ChangePassword";
 import { useDispatch, useSelector } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
+import AuthReject from "./middlewares/AuthReject";
 import "./App.css";
 
 function App() {
@@ -39,7 +40,14 @@ function App() {
       />
       <Routes>
         <Route path="/" element={<Auth />} />
-        <Route path="/home" element={<Home />} />
+        <Route
+          path="/home"
+          element={
+            <AuthReject>
+              <Home />
+            </AuthReject>
+          }
+        />
         <Route path="/activation/:key" element={<Activation />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/forgot-password" element={<ForgotPass />} />

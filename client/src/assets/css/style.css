@@ -148,6 +148,8 @@ ul {
   --shadow-1: rgba(0, 0, 0, 0.1);
   --shadow-1: rgba(0, 0, 0, 0.3);
   --shadow-inset: rgba(255, 255, 255, 0.5);
+  --border-shadow: 0 0 0 1px rgba(139, 3, 0, 0.75),
+    0 1px 10px rgba(0, 0, 0, 0.35);
 }
 
 /**
@@ -1403,4 +1405,173 @@ Components
   border-radius: 50%;
   padding: 5px;
   color: #fff;
+}
+
+/* input border validation  */
+.error-border {
+  border: 1px solid red !important;
+}
+
+.exclamation-sign-fname {
+  color: #be4b49;
+  font-size: 20px;
+  position: absolute;
+  left: 187px;
+  top: 109px;
+}
+
+.exclamation-sign-sname {
+  color: #be4b49;
+  font-size: 20px;
+  position: absolute;
+  right: 20px;
+  top: 107px;
+}
+
+.exclamation-sign-mobileOrEmail {
+  color: #be4b49;
+  font-size: 20px;
+  position: absolute;
+  right: 20px;
+  top: 157px;
+}
+
+.exclamation-sign-password {
+  color: #be4b49;
+  font-size: 20px;
+  position: absolute;
+  right: 20px;
+  top: 209px;
+}
+
+.exclamation-sign-dob {
+  color: #be4b49;
+  font-size: 20px;
+  position: absolute;
+  right: 20px;
+  bottom: 280px;
+}
+
+.exclamation-sign-gender {
+  color: #be4b49;
+  font-size: 20px;
+  position: absolute;
+  right: 20px;
+  bottom: 210px;
+}
+
+/* Tooltip for fname  */
+.tooltip-fname {
+  width: 180px;
+  height: 40px;
+  background-color: #be4b49;
+  position: absolute;
+  top: 97px;
+  left: -180px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  box-shadow: var(--border-shadow);
+}
+
+.tooltip-fname p {
+  color: white;
+  font-size: 14px;
+}
+.tooltip-fname .tooltip-arrow-sign {
+  width: 20px;
+  height: 20px;
+  background-color: #be4b49;
+  position: absolute;
+  top: 11px;
+  right: -10px;
+  transform: rotate(137deg);
+}
+
+/* Tooltip for Surname  */
+.tooltip-sname {
+  width: 160px;
+  height: 45px;
+  background-color: #be4b49;
+  position: absolute;
+  top: 155px;
+  right: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  box-shadow: var(--border-shadow);
+}
+
+.tooltip-sname p {
+  color: white;
+  font-size: 14px;
+}
+.tooltip-sname .tooltip-arrow-sign {
+  width: 20px;
+  height: 20px;
+  background-color: #be4b49;
+  position: absolute;
+  top: -7px;
+  right: 115px;
+  transform: rotate(137deg);
+}
+
+/* Tooltip for mobileOrEmail  */
+.tooltip-mobileOrEmail {
+  width: 200px;
+  height: 40px;
+  background-color: #be4b49;
+  position: absolute;
+  top: 150px;
+  left: -200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  box-shadow: var(--border-shadow);
+}
+
+.tooltip-mobileOrEmail p {
+  color: white;
+  font-size: 14px;
+}
+.tooltip-mobileOrEmail .tooltip-arrow-sign {
+  width: 20px;
+  height: 20px;
+  background-color: #be4b49;
+  position: absolute;
+  top: 11px;
+  right: -10px;
+  transform: rotate(137deg);
+}
+
+/* Tooltip for password  */
+.tooltip-password {
+  width: 180px;
+  height: 40px;
+  background-color: #be4b49;
+  position: absolute;
+  top: 199px;
+  left: -180px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  box-shadow: var(--border-shadow);
+}
+
+.tooltip-password p {
+  color: white;
+  font-size: 14px;
+}
+.tooltip-password .tooltip-arrow-sign {
+  width: 20px;
+  height: 20px;
+  background-color: #be4b49;
+  position: absolute;
+  top: 11px;
+  right: -10px;
+  transform: rotate(137deg);
 }
