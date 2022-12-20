@@ -66,10 +66,18 @@ const RegisterModal = ({ setRegModal }) => {
 
   // input feilds manage
   const handleInputData = (e) => {
+    const feildName = e.target.name;
+
     setInput((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
+
+    // tooltip validation
+    setTooltip({
+      ...tooltip,
+      [feildName]: false,
+    });
   };
 
   // input validation state
@@ -112,7 +120,7 @@ const RegisterModal = ({ setRegModal }) => {
   // handle tooltip
   const handleTooltip = (e) => {
     const feildName = e.target.name;
-    // console.log(feildName);
+    // console.log(e.target.value);
 
     if (validate[feildName] === true) {
       // border validation
