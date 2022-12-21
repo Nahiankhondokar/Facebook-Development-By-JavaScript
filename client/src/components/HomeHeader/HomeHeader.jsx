@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { UserLogout } from "../../redux/auth/action";
 import Avatar from "../Avatar/Avatar";
 import logo from "./../../assets/icons/favicon.ico";
 
 const HomeHeader = () => {
   // selctor
   const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   // console.log(user);
 
   // states
@@ -20,6 +22,12 @@ const HomeHeader = () => {
     } else {
       setLogoutInfo(true);
     }
+  };
+
+  // handle logout user
+  const handleLogoutUser = (e) => {
+    e.preventDefault();
+    dispatch(UserLogout());
   };
 
   return (
@@ -230,7 +238,7 @@ const HomeHeader = () => {
                       </a>
                     </li>
                     <li>
-                      <a href="#">
+                      <a href="#" onClick={handleLogoutUser}>
                         <div className="user-menu-icon"></div>
                         <div className="user-menu-item">
                           <span>Logout</span>
