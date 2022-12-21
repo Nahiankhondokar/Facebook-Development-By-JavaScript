@@ -1,9 +1,12 @@
 import {
+  LOGGEDIN_USER_FAILED,
+  LOGGEDIN_USER_SUCCESS,
   LOGIN_FAILED,
   LOGIN_SUCCESS,
   REGISTER_FAILED,
   REGISTER_REQUEST,
   REGISTER_SUCCESS,
+  USER_LOGOUT,
 } from "./actionType";
 import { initialState } from "./initialState";
 
@@ -35,7 +38,7 @@ export const AuthReducer = (state = initialState, { type, payload }) => {
         ...state,
         loginStatus: false,
         message: "login failed",
-        user: {},
+        user: null,
       };
 
     case LOGIN_SUCCESS:
@@ -45,6 +48,31 @@ export const AuthReducer = (state = initialState, { type, payload }) => {
         loading: true,
         message: "login successful",
         user: payload,
+      };
+
+    case LOGGEDIN_USER_SUCCESS:
+      return {
+        ...state,
+        loginStatus: true,
+        loading: false,
+        user: payload,
+      };
+
+    case LOGGEDIN_USER_FAILED:
+      return {
+        ...state,
+        loginStatus: false,
+        loading: false,
+        user: null,
+      };
+
+    case USER_LOGOUT:
+      return {
+        ...state,
+        loginStatus: false,
+        loading: false,
+        message: null,
+        user: null,
       };
 
     default:

@@ -2,15 +2,19 @@ import axios from "axios";
 import CreateToaster from "../../utility/Toaster";
 import Cookie from "js-cookie";
 import {
+  LOGGEDIN_USER_FAILED,
+  LOGGEDIN_USER_REQUEST,
+  LOGGEDIN_USER_SUCCESS,
   LOGIN_FAILED,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   REGISTER_FAILED,
   REGISTER_REQUEST,
   REGISTER_SUCCESS,
+  USER_LOGOUT,
 } from "./actionType";
 import Cookies from "js-cookie";
-import { LOADER_START } from "../top-loader/loaderTypes";
+import { LOADER_END, LOADER_START } from "../top-loader/loaderTypes";
 
 // user register
 export const UserRegister =
@@ -184,6 +188,9 @@ export const UserLogin = (auth, password, navigate) => async (dispatch) => {
           type: LOGIN_SUCCESS,
           payload: res.data.user,
         });
+        dispatch({
+          type: LOADER_END,
+        });
         CreateToaster(res.data.message, "success");
         navigate("/home");
       })
@@ -192,9 +199,73 @@ export const UserLogin = (auth, password, navigate) => async (dispatch) => {
         dispatch({
           type: LOGIN_FAILED,
         });
+        dispatch({
+          type: LOADER_END,
+        });
         CreateToaster(error.response.data.message, "error");
       });
   } catch (error) {
+    dispatch({
+      type: LOADER_END,
+    });
     CreateToaster(error.response.data.message, "error");
   }
+};
+
+// get loggedIn user data
+export const LoggedInUser = (token) => async (dispatch) => {
+  try {
+    // dispatch call
+    dispatch({
+      type: LOGGEDIN_USER_REQUEST,
+    });
+    dispatch({
+      type: LOADER_START,
+    });
+    // user login
+    await axios
+      .get("/api/v1/user/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        // dispatch call
+        dispatch({
+          type: LOGGEDIN_USER_SUCCESS,
+          payload: res.data.user,
+        });
+        dispatch({
+          type: LOADER_END,
+        });
+        CreateToaster(res.data.message, "success");
+        // navigate("/home");
+      })
+      .catch((error) => {
+        // dispatch call
+        dispatch({
+          type: LOGGEDIN_USER_FAILED,
+        });
+        dispatch({
+          type: LOADER_END,
+        });
+        // user logout
+        dispatch(UserLogout());
+        CreateToaster(error.response.data.message, "error");
+      });
+  } catch (error) {
+    dispatch({
+      type: LOADER_END,
+    });
+    dispatch(UserLogout());
+    CreateToaster(error.response.data.message, "error");
+  }
+};
+
+// user logout
+export const UserLogout = () => {
+  Cookies.remove("authToken");
+  return {
+    type: USER_LOGOUT,
+  };
 };

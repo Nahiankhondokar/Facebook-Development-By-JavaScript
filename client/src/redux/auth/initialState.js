@@ -1,7 +1,7 @@
 // intial state
 export const initialState = {
-  user: {},
+  user: null,
   loginStatus: false,
   loading: false,
-  message: "",
+  message: null,
 };

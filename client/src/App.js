@@ -12,11 +12,26 @@ import { useDispatch, useSelector } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
 import AuthReject from "./middlewares/AuthReject";
 import "./App.css";
+import AuthRedirect from "./middlewares/AuthRedirect";
+import Cookies from "js-cookie";
+import { useEffect } from "react";
+import { LoggedInUser } from "./redux/auth/action";
 
 function App() {
   // selector
   const loader = useSelector((state) => state.loader);
   const loaderDispatch = useDispatch();
+  const loggedInDispatch = useDispatch();
+
+  // get data form cookies
+  const loggedInUserToken = Cookies.get("authToken");
+  // console.log(loggedInUserToken);
+
+  useEffect(() => {
+    if (loggedInUserToken) {
+      loggedInDispatch(LoggedInUser(loggedInUserToken));
+    }
+  }, [loggedInDispatch]);
 
   return (
     <>
@@ -39,13 +54,20 @@ function App() {
         theme="light"
       />
       <Routes>
-        <Route path="/" element={<Auth />} />
+        <Route
+          path="/"
+          element={
+            <AuthReject>
+              <Auth />
+            </AuthReject>
+          }
+        />
         <Route
           path="/home"
           element={
-            <AuthReject>
+            <AuthRedirect>
               <Home />
-            </AuthReject>
+            </AuthRedirect>
           }
         />
         <Route path="/activation/:key" element={<Activation />} />

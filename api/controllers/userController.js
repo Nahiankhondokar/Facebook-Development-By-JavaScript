@@ -326,7 +326,7 @@ export const loggedInUser = async (req, res, next) => {
         if (!loggedIn_user) {
           next(createError(404, "LoggedIn User no Found!"));
         } else {
-          res.status(200).json({ loggedIn_user });
+          res.status(200).json({ user: loggedIn_user });
         }
       }
     }
