@@ -54,14 +54,7 @@ function App() {
         theme="light"
       />
       <Routes>
-        <Route
-          path="/"
-          element={
-            <AuthReject>
-              <Auth />
-            </AuthReject>
-          }
-        />
+        <Route path="/" element={<Auth />} />
         <Route
           path="/home"
           element={

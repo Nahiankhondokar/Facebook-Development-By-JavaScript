@@ -263,9 +263,13 @@ export const LoggedInUser = (token) => async (dispatch) => {
 };
 
 // user logout
-export const UserLogout = () => {
+export const UserLogout = (navigate) => (dispatch) => {
   Cookies.remove("authToken");
-  return {
+  navigate("/");
+  dispatch({
+    type: LOADER_START,
+  });
+  dispatch({
     type: USER_LOGOUT,
-  };
+  });
 };

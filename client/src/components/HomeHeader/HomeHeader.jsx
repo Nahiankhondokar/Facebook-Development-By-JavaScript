@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { UserLogout } from "../../redux/auth/action";
 import Avatar from "../Avatar/Avatar";
 import logo from "./../../assets/icons/favicon.ico";
@@ -8,6 +9,7 @@ const HomeHeader = () => {
   // selctor
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   // console.log(user);
 
   // states
@@ -27,7 +29,7 @@ const HomeHeader = () => {
   // handle logout user
   const handleLogoutUser = (e) => {
     e.preventDefault();
-    dispatch(UserLogout());
+    dispatch(UserLogout(navigate));
   };
 
   return (
