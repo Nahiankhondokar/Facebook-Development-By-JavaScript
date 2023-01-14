@@ -16,6 +16,9 @@ import AuthRedirect from "./middlewares/AuthRedirect";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
 import { LoggedInUser } from "./redux/auth/action";
+import Friends from "./pages/Friends/Friends";
+import LoggedInRoute from "./middlewares/LoggedInRoute";
+import LoggedOutRoute from "./middlewares/LoggedOutRoute";
 
 function App() {
   // selector
@@ -53,18 +56,36 @@ function App() {
         pauseOnHover
         theme="light"
       />
+
+      {/* All Routes */}
       <Routes>
+        {/* <Route element={<LoggedOutRoute />}> */}
         <Route path="/" element={<Auth />} />
+        {/* </Route> */}
+
         <Route
           path="/home"
           element={
             <AuthRedirect>
               <Home />
+              <Auth />
             </AuthRedirect>
           }
         />
         <Route path="/activation/:key" element={<Activation />} />
-        <Route path="/profile" element={<Profile />} />
+
+        <Route element={<LoggedInRoute />}>
+          <Route path="/friends" element={<Friends />} />
+        </Route>
+        <Route
+          path="/profile"
+          element={
+            <AuthReject>
+              <Profile />
+            </AuthReject>
+          }
+        />
+
         <Route path="/forgot-password" element={<ForgotPass />} />
         <Route path="/find-account" element={<FindAccount />} />
         <Route path="/change-password" element={<ChangePassword />} />

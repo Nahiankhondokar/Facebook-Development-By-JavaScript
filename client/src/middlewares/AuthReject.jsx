@@ -6,7 +6,7 @@ const AuthReject = ({ children }) => {
   // selector
   const { loginStatus } = useSelector((state) => state.auth);
 
-  return loginStatus ? <Navigate to="/home" /> : children;
+  return loginStatus ? children : <Navigate to="/" />;
 };
 
 export default AuthReject;

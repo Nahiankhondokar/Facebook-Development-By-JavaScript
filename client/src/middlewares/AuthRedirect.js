@@ -6,7 +6,7 @@ const AuthRedirect = ({ children }) => {
   // selector
   const { loginStatus } = useSelector((state) => state.auth);
 
-  return loginStatus === true ? children : <Navigate to="/" />;
+  return loginStatus === false ? children : <Navigate to="/" />;
 };
 
 export default AuthRedirect;
