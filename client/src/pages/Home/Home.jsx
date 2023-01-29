@@ -12,7 +12,7 @@ const Home = () => {
       <div className="fb-home-body">
         <Sidebar />
 
-        <Timeline />
+        <Timeline size="68%" />
       </div>
     </>
   );

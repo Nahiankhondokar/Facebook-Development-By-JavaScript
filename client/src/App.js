@@ -9,9 +9,7 @@ import FindAccount from "./pages/FindAccount/FindAccount";
 import LoadingBar from "react-top-loading-bar";
 import ChangePassword from "./pages/ChangePassword/ChangePassword";
 import { useDispatch, useSelector } from "react-redux";
-import "react-toastify/dist/ReactToastify.css";
 import AuthReject from "./middlewares/AuthReject";
-import "./App.css";
 import AuthRedirect from "./middlewares/AuthRedirect";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
@@ -19,6 +17,8 @@ import { LoggedInUser } from "./redux/auth/action";
 import Friends from "./pages/Friends/Friends";
 import LoggedInRoute from "./middlewares/LoggedInRoute";
 import LoggedOutRoute from "./middlewares/LoggedOutRoute";
+import "react-toastify/dist/ReactToastify.css";
+import "./App.css";
 
 function App() {
   // selector

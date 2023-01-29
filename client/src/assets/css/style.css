@@ -459,6 +459,7 @@ Components
   top: 0px;
   top: 0px;
   width: 100%;
+  z-index: 999;
 }
 
 .fb-home-menu ul {
@@ -629,7 +630,6 @@ Components
 
 /* FB TIMELINE  */
 .fb-home-timeline-area {
-  width: 60%;
   display: flex;
   justify-content: center;
 }
@@ -639,7 +639,7 @@ Components
 }
 
 .create-post {
-  width: 100%;
+  width: 93%;
   background-color: #fff;
   padding: 15px;
   box-shadow: 0 2px 3px rgb(0 0 0 / 10%), 0 0px 0px rgb(0 0 0 / 10%);
@@ -721,7 +721,7 @@ Components
 }
 
 .user-post {
-  width: 100%;
+  width: 93%;
   background-color: #fff;
   box-shadow: 0 2px 3px rgb(0 0 0 / 10%), 0 0px 0px rgb(0 0 0 / 10%);
   border-radius: 6px;
@@ -1598,8 +1598,8 @@ Components
 }
 
 .fb-profile-header .fb-cover-photo {
-  width: 70%;
-  height: 500px;
+  width: 80%;
+  height: 300px;
   border-radius: 0px 0px 10px 10px;
   overflow: hidden;
   margin: 0px auto;
@@ -1663,7 +1663,7 @@ span.camera-icon {
 }
 
 .fb-profile-details {
-  width: 1200px;
+  width: 73%;
   margin: auto;
   display: flex;
   justify-content: space-between;
@@ -1672,9 +1672,9 @@ span.camera-icon {
 }
 
 .fb-profile-details .profile-info {
-  width: 1200px;
+  width: 73%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: flex-end;
   gap: 10px;
 }
@@ -1765,10 +1765,12 @@ span.camera-icon {
   min-height: 300px;
   width: 100%;
   background-color: #f0f2f5;
+
+  z-index: -1;
 }
 
 .fb-profile-menu {
-  width: 1200px;
+  width: 900px;
   margin: auto;
   border-top: 1px solid #ccced2;
 }
@@ -1785,4 +1787,84 @@ span.camera-icon {
   display: block;
   font-size: 16px;
   font-family: inherit;
+}
+
+/* FB profile Body Css */
+
+.fb-profile-body-wrapper {
+  width: 73%;
+  margin: auto;
+  padding: 20px 0px;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.profile-bio {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.personal-details-info {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0px 0px;
+}
+
+.personal-details-info ul {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.personal-details-info ul li {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.personal-details-info ul li img {
+  filter: contrast(0.001);
+}
+
+.button-css {
+  width: 100%;
+  background-color: rgb(221, 221, 221);
+  font-weight: bold;
+  border: none;
+  display: inline-block;
+  height: 30px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.button-css:hover {
+  background-color: #ccc;
+}
+
+/* // Personal Hobbis CSS */
+
+.personal-hobbies {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px 0px;
+}
+
+.hobbies-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid #cbcbcb;
+  width: 100px;
+  border-radius: 100px;
+  padding: 5px;
+}
+
+.hobbies-list img {
+  width: 17px;
+  height: 17px;
 }

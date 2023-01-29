@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import usePopupClose from "../../hooks/usePopupClose";
 import { UserLogout } from "../../redux/auth/action";
 import Avatar from "../Avatar/Avatar";
 import logo from "./../../assets/icons/favicon.ico";
@@ -31,6 +33,10 @@ const HomeHeader = () => {
     e.preventDefault();
     dispatch(UserLogout(navigate));
   };
+
+  // drop down by useRef
+  const dropdown = useRef(null);
+  usePopupClose(dropdown, setLogoutInfo);
 
   return (
     <>
@@ -194,11 +200,11 @@ const HomeHeader = () => {
           </div>
           <div className="fb-user-item">
             {logoutInfo && (
-              <div className="user-menu-dropdown">
+              <div className="user-menu-dropdown" ref={dropdown}>
                 <div className="user-menu-box">
                   <div className="user-data-box">
                     <div className="user-data-box-item">
-                      <Link to="profile">
+                      <Link to="/profile">
                         <Avatar />
                         <span>{`${user.first_name} ${user.sur_name}`}</span>
                       </Link>

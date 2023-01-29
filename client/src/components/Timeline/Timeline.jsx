@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import Avatar from "../Avatar/Avatar";
 import CreatePost from "../CreatePost/CreatePost";
 
-const Timeline = () => {
+const Timeline = (props) => {
   // states
   const [postInfo, setPostInfo] = useState(false);
 
@@ -12,7 +12,7 @@ const Timeline = () => {
 
   return (
     <>
-      <div className="fb-home-timeline-area">
+      <div className="fb-home-timeline-area" style={{ width: props.size }}>
         <div className="fb-home-timeline">
           <CreatePost />
 
