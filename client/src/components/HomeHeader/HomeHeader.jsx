@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import usePopupClose from "../../hooks/usePopupClose";
 import { UserLogout } from "../../redux/auth/action";
-import Avatar from "../Avatar/Avatar";
+import Avatar from "./../Avatar/Avatar";
 import logo from "./../../assets/icons/favicon.ico";
 
 const HomeHeader = () => {

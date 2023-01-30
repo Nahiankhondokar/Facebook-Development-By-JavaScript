@@ -1868,3 +1868,63 @@ span.camera-icon {
   width: 17px;
   height: 17px;
 }
+
+/* // profile intro bio */
+
+.click-update {
+  width: 100%;
+}
+
+.click-update textarea {
+  width: 100%;
+  height: 70px;
+  background: #f0f2f5;
+  outline: none;
+  border: 1px solid #f0f2f5;
+  padding: 10px;
+  text-align: center;
+}
+
+.click-update textarea:focus {
+  border-color: var(--blue-color);
+  background-color: #fff;
+}
+
+.click-update p {
+  text-align: right;
+  color: #555;
+  font-size: 13px;
+}
+
+.click-update .click-update-btn {
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+}
+
+.click-update .click-update-btn .bio-btn {
+  display: flex;
+  gap: 5px;
+}
+
+.click-update .click-update-btn .bio-btn button {
+  padding: 7px 10px;
+  background-color: rgb(221, 221, 221);
+  cursor: pointer;
+  outline: none;
+  border-color: transparent;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.bio-status {
+  display: flex;
+  gap: 3px;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.earth-icon {
+  width: 21px;
+  height: 21px;
+}
